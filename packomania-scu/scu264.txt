@@ -1,7 +1,7 @@
 0.08142630540088119
 #
 # coordinates of scu264
-# cell scu N=264 value 0.08142630540088119 table 0.081425055157 B(N) 0.081425055157 source scu-ext cloud/1102/results/scu-ext/scu264.txt
+# cell scu N=264 value 0.08142630540088119 table 0.081425055157 B(N) 0.081425055157
 #
 #                        x-coord                     y-coord                     z-coord  radius
 # ----------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 0.06591798724943088
 #
 # coordinates of scu510
-# cell scu N=510 value 0.06591798724943088 table 0.065910879867 B(N) 0.065910879867 source scu-hi cloud/1103/results/scu-hi/scu510.txt
+# cell scu N=510 value 0.06591798724943088 table 0.065910879867 B(N) 0.065910879867
 #
 #                     x-coord                  y-coord                  z-coord  radius
 # -------------------------------------------------------------------------------------

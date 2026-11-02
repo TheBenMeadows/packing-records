@@ -1,7 +1,7 @@
 0.07014415171507299
 #
 # coordinates of scu427
-# cell scu N=427 value 0.07014415171507299 table 0.070143604465 B(N) 0.070143604465 source scu-hi cloud/1103/results/scu-hi/scu427.txt
+# cell scu N=427 value 0.07014415171507299 table 0.070143604465 B(N) 0.070143604465
 #
 #                        x-coord                     y-coord                     z-coord  radius
 # ----------------------------------------------------------------------------------------------

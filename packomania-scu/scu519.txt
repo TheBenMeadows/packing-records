@@ -1,7 +1,7 @@
 0.06585537521832213
 #
 # coordinates of scu519
-# cell scu N=519 value 0.06585537521832213 table 0.065849365818 B(N) 0.065851831431 source scu-hi cloud/1103/results/scu-hi/scu519.txt
+# cell scu N=519 value 0.06585537521832213 table 0.065849365818 B(N) 0.065851831431
 #
 #                   x-coord                y-coord                z-coord  radius
 # -------------------------------------------------------------------------------

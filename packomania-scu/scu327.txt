@@ -1,7 +1,7 @@
 0.07593931882068949
 #
 # coordinates of scu327
-# cell scu N=327 value 0.07593931882068949 table 0.075927703334 B(N) 0.075927703334 source scu-ext cloud/1102/results/scu-ext/scu327.txt
+# cell scu N=327 value 0.07593931882068949 table 0.075927703334 B(N) 0.075927703334
 #
 #                    x-coord                 y-coord                 z-coord  radius
 # ----------------------------------------------------------------------------------

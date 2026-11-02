@@ -29,21 +29,21 @@ def to_fraction(s):
     return Fraction(Decimal(s))
 
 
+def _exact_parts(s):
+    """Decimal string -> (integer coefficient, decimal exponent), with no rounding."""
+    t = Decimal(s).as_tuple()
+    if not isinstance(t.exponent, int):
+        raise ValueError('not a finite number: %r' % s)
+    c = int(''.join(map(str, t.digits)) or '0')
+    return (-c if t.sign else c), t.exponent
+
+
 def scale_rows(rows):
-    """rows of decimal strings -> (integer rows, scale) with value = int / scale."""
-    exps = []
-    for r in rows:
-        for s in r:
-            e = Decimal(s).as_tuple().exponent
-            exps.append(-e if e < 0 else 0)
-    k = max(exps) if exps else 0
+    """rows of decimal strings -> (integer rows, scale) with value = int / scale, exactly."""
+    parts = [[_exact_parts(s) for s in r] for r in rows]
+    k = max([-e for r in parts for _, e in r if e < 0] or [0])
     scale = 10 ** k
-    out = []
-    for r in rows:
-        out.append([int(Decimal(s).scaleb(k)) for s in r])
-        for s, v in zip(r, out[-1]):
-            assert Decimal(v) == Decimal(s).scaleb(k), 'non-exact scaling'
-    return out, scale
+    return [[c * 10 ** (e + k) for c, e in r] for r in parts], scale
 
 
 def read_grassmannian(path, m, n, N):
@@ -96,6 +96,8 @@ def read_packomania(path, dim, N, radius_column):
             raise ValueError('row with %d fields, expected %d' % (len(f), want))
         if int(f[0]) != len(rows) + 1:
             raise ValueError('index %s out of sequence' % f[0])
+        if radius_column and Decimal(f[1 + dim]) != Decimal(first):
+            raise ValueError('row %s radius %s differs from the first-line radius' % (f[0], f[1 + dim]))
         rows.append(f[1:1 + dim])
     if len(rows) != N:
         raise ValueError('%d centre rows, expected N = %d' % (len(rows), N))
@@ -111,7 +113,9 @@ def _inv_adj(G):
     M = [[Fraction(G[i][j]) for j in range(n)] + [Fraction(int(i == j)) for j in range(n)] for i in range(n)]
     det = Fraction(1)
     for c in range(n):
-        p = next(r for r in range(c, n) if M[r][c] != 0)
+        p = next((r for r in range(c, n) if M[r][c] != 0), None)
+        if p is None:
+            raise ValueError('basis vectors of a subspace are linearly dependent')
         if p != c:
             M[c], M[p] = M[p], M[c]
             det = -det
@@ -122,12 +126,12 @@ def _inv_adj(G):
             if r != c and M[r][c] != 0:
                 f = M[r][c]
                 M[r] = [a - f * b for a, b in zip(M[r], M[c])]
-    assert det.denominator == 1 and det > 0
+    if det.denominator != 1 or det <= 0:
+        raise ValueError('Gram matrix is not positive definite')
     g = det.numerator
     H = [[M[i][n + j] * g for j in range(n)] for i in range(n)]
-    for row in H:
-        for x in row:
-            assert x.denominator == 1
+    if any(x.denominator != 1 for row in H for x in row):
+        raise ValueError('non-integral adjugate')
     return [[x.numerator for x in row] for row in H], g
 
 
@@ -139,7 +143,8 @@ def grassmannian(rows, m, n, N):
     if n == 1:
         v = [b[0] for b in blocks]
         nn = [sum(x * x for x in a) for a in v]
-        assert all(x > 0 for x in nn)
+        if not all(x > 0 for x in nn):
+            raise ValueError('zero vector')
         # d2 = 1 - (a.b)^2/(|a|^2|b|^2); minimise d2 = maximise the ratio
         bp, bq = -1, 1
         for i in range(N):
@@ -176,7 +181,8 @@ def sloanes_mu2(vals, d, n):
     re = [X[j * d:(j + 1) * d] for j in range(n)]
     im = [X[d * n + j * d:d * n + (j + 1) * d] for j in range(n)]
     nn = [sum(a * a for a in re[j]) + sum(b * b for b in im[j]) for j in range(n)]
-    assert all(x > 0 for x in nn)
+    if not all(x > 0 for x in nn):
+        raise ValueError('zero vector')
     bp, bq, arg = -1, 1, None
     for j in range(n):
         for k in range(j + 1, n):
@@ -214,6 +220,31 @@ def scu(rows):
     D, arg = _min_sq_dist(P)
     A = max(abs(x) for p in P for x in p)
     return Fraction(D, sc * sc), Fraction(A, sc), arg
+
+
+def orthonormal_defect(rows, n, N):
+    """max over blocks of max |A_i A_i^T - I| entry (Fraction): how far each
+    stored basis is from orthonormal. The measure itself does not need it."""
+    A, sc = scale_rows(rows)
+    worst = Fraction(0)
+    for b in range(N):
+        B = A[b * n:(b + 1) * n]
+        for i in range(n):
+            for j in range(i, n):
+                g = Fraction(sum(x * y for x, y in zip(B[i], B[j])), sc * sc)
+                worst = max(worst, abs(g - (1 if i == j else 0)))
+    return worst
+
+
+def unit_norm_defect(vals, d, n):
+    """max over vectors of |norm^2 - 1| (Fraction)."""
+    X, sc = scale_rows([vals])
+    X = X[0]
+    worst = Fraction(0)
+    for j in range(n):
+        s = sum(X[j * d + i] ** 2 + X[d * n + j * d + i] ** 2 for i in range(d))
+        worst = max(worst, abs(Fraction(s, sc * sc) - 1))
+    return worst
 
 
 # ---------------------------------------------------------------- printing

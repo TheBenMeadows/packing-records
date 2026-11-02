@@ -1,7 +1,7 @@
 0.0729376475580234
 #
 # coordinates of scu374
-# cell scu N=374 value 0.0729376475580234 table 0.072877401436 B(N) 0.072877401436 source scu-ext cloud/1102/results/scu-ext/scu374.txt
+# cell scu N=374 value 0.0729376475580234 table 0.072877401436 B(N) 0.072877401436
 #
 #                      x-coord                   y-coord                   z-coord  radius
 # ----------------------------------------------------------------------------------------

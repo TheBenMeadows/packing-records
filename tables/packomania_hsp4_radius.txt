@@ -1,3 +1,5 @@
+# Facts extracted from https://packomania.com/hsp4/txt/radius.txt (Eckard Specht, Packomania), read 2026-11-01.
+# Columns: N, radius.
 2 0.500000000000
 3 0.464101615138
 4 0.449489742783

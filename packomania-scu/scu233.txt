@@ -1,7 +1,7 @@
 0.08449574057972914
 #
 # coordinates of scu233
-# cell scu N=233 value 0.08449574057972914 table 0.084433236603 B(N) 0.084433236603 source scu-ext cloud/1102/results/scu-ext/scu233.txt
+# cell scu N=233 value 0.08449574057972914 table 0.084433236603 B(N) 0.084433236603
 #
 #                       x-coord                    y-coord                    z-coord  radius
 # -------------------------------------------------------------------------------------------

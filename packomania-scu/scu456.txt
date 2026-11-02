@@ -1,7 +1,7 @@
 0.06817559618777225
 #
 # coordinates of scu456
-# cell scu N=456 value 0.06817559618777225 table 0.068102970391 B(N) 0.068102970391 source scu-hi cloud/1103/results/scu-hi/scu456.txt
+# cell scu N=456 value 0.06817559618777225 table 0.068102970391 B(N) 0.068102970391
 #
 #                    x-coord                 y-coord                 z-coord  radius
 # ----------------------------------------------------------------------------------

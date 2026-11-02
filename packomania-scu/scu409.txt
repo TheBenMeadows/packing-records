@@ -1,7 +1,7 @@
 0.07099282205020391
 #
 # coordinates of scu409
-# cell scu N=409 value 0.07099282205020391 table 0.070992523720 B(N) 0.070992523720 source scu-hi cloud/1103/results/scu-hi/scu409.txt
+# cell scu N=409 value 0.07099282205020391 table 0.070992523720 B(N) 0.070992523720
 #
 #                     x-coord                  y-coord                  z-coord  radius
 # -------------------------------------------------------------------------------------

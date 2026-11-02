@@ -1,7 +1,7 @@
 0.09130002650076702
 #
 # coordinates of scu185
-# cell scu N=185 value 0.09130002650076702 table 0.091292909602 B(N) 0.091292909602 source scu-ext cloud/1102/results/scu-ext/scu185.txt
+# cell scu N=185 value 0.09130002650076702 table 0.091292909602 B(N) 0.091292909602
 #
 #                    x-coord                 y-coord                 z-coord  radius
 # ----------------------------------------------------------------------------------

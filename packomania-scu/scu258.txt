@@ -1,7 +1,7 @@
 0.082522503045968364
 #
 # coordinates of scu258
-# cell scu N=258 value 0.082522503045968364 table 0.082513880246 B(N) 0.082513880246 source scu-ext cloud/1102/results/scu-ext/scu258.txt
+# cell scu N=258 value 0.082522503045968364 table 0.082513880246 B(N) 0.082513880246
 #
 #                   x-coord                y-coord                z-coord  radius
 # -------------------------------------------------------------------------------
