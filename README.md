@@ -46,7 +46,7 @@ The checker reads every file, recomputes its value with exact rational arithmeti
 
 ## Search methods
 
-The searches were numerical optimization runs: smoothed-maximum (log-sum-exp) descent and Riesz-energy relaxation from random starts, basin hopping, large-neighborhood search that removes and reinserts parts of a configuration, and a final sequential linear-programming polish of the active contacts. For the Packomania tables, 87 of the 108 hsp4 cells and all 159 scu cells started from the configuration posted on Packomania for that N, or for a nearby N. `cells.csv` marks each one in `started_from_posted` and names that configuration's author in `seed_author`.
+The searches were designed and run with AI coding assistants. They were numerical optimization runs: smoothed-maximum (log-sum-exp) descent and Riesz-energy relaxation from random starts, basin hopping, large-neighborhood search that removes and reinserts parts of a configuration, and a final sequential linear-programming polish of the active contacts. For the Packomania tables, 87 of the 108 hsp4 cells and all 159 scu cells started from the configuration posted on Packomania for that N, or for a nearby N. `cells.csv` marks each one in `started_from_posted` and names that configuration's author in `seed_author`.
 
 ## Credit and license
 
