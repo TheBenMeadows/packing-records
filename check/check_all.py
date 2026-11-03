@@ -3,10 +3,11 @@
 For each row: the file exists, its sha256 matches, it parses in its table's own
 layout, its value recomputed exactly (exact.py) equals the recorded value, and
 the keep rules hold on exact rationals:
-  grassmannian     row not starred and not noted optimal; value >= table + 1e-7
-                   + 1e-10 (the table rounds values down to 10 decimals);
-                   value < bound - 1e-8 when a bound is listed; every stored
-                   basis is orthonormal to within 1e-20
+  grassmannian     row not starred and not noted optimal; value >= table + 1e-10
+                   (the table rounds values down to 10 decimals, so this beats
+                   the true table value and changes its printed last digit);
+                   value < bound when a bound is listed (bounds are rounded
+                   up); every stored basis is orthonormal to within 1e-20
   game-of-sloanes  row not provably optimal; mu <= table - 1e-7; mu >= lower
                    bound; every stored vector has unit norm to within 1e-15
   packomania-hsp4  r* >= max over listed N' >= N of r(N') + 1e-7, and
@@ -32,7 +33,7 @@ import exact  # noqa: E402
 
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
-EXPECTED = {'grassmannian': 731, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 159}
+EXPECTED = {'grassmannian': 747, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 159}
 FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu')
 
 
@@ -87,10 +88,10 @@ def check_grassmannian(r, full, C):
         msg.append('a stored basis is not orthonormal')
     val, _ = exact.grassmannian(data, m, n, N)
     vd = exact.dec(val)
-    if not val >= Fraction(Decimal(row['value'])) + E7 + E10:
-        msg.append('does not beat table by 1e-7')
-    if row['bound'] and not val < Fraction(Decimal(row['bound'])) - E8:
-        msg.append('within 1e-8 of bound (or above it)')
+    if not val >= Fraction(Decimal(row['value'])) + E10:
+        msg.append('does not beat the table in its last printed digit')
+    if row['bound'] and not val < Fraction(Decimal(row['bound'])):
+        msg.append('not below the listed bound')
     return msg, vd
 
 

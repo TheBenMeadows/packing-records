@@ -4,18 +4,18 @@ Explicit configurations that improve entries in four public record tables for pa
 
 | Table | Folder | Candidate improvements | Record keeper |
 |---|---|---|---|
-| Grassmannian packings (N subspaces of R^m) | `grassmannian/` | 731 | Henry Cohn, https://cohn.mit.edu/grassmannian |
+| Grassmannian packings (N subspaces of R^m) | `grassmannian/` | 747 | Henry Cohn, https://cohn.mit.edu/grassmannian |
 | Game of Sloanes (complex line packings) | `game-of-sloanes/` | 52 | https://github.com/gnikylime/GameofSloanes |
 | Equal 4-D spheres in a 4-D sphere (hsp4) | `packomania-hsp4/` | 108 | Eckard Specht, https://packomania.com/hsp4/hsp4.html |
 | Equal spheres in a cube (scu) | `packomania-scu/` | 159 | Eckard Specht, https://packomania.com/scu/scu.html |
 
-The tables were read on 2026-10-31 and 2026-11-01. The record keepers have not reviewed these results yet. A result becomes a record only when its keeper lists it.
+The tables were read on 2026-10-31 and 2026-11-01. The 16 Grassmannian cells added in version 1.1 were checked against the table as it read on 2026-11-03. A result becomes a record only when its keeper lists it. Henry Cohn added the 731 Grassmannian files of version 1.0.0 to his table by 2026-11-03 (reference [24] there). The other keepers have not listed these results yet.
 
 ## What counts as an improvement
 
-Each file beats its table entry by at least 1e-7 in the table's own measure:
+Each file beats its table entry in the table's own measure, by at least 1e-7 except where stated:
 
-- Grassmannian: the minimum squared chordal distance, n - ||U_i^T U_j||_F^2 over all pairs of orthonormal bases, is at least 1e-7 larger than the table value. The table rounds values down to 10 decimals, so the checker adds 1e-10 to the table value before the comparison. Starred rows and rows noted as proven optimal are excluded. Cells within 1e-8 of the listed upper bound are excluded, because there the gain can be an artifact of the table's rounding.
+- Grassmannian: the minimum squared chordal distance, n - ||U_i^T U_j||_F^2 over all pairs of orthonormal bases, is at least 1e-10 larger than the table value. The table rounds values down to 10 decimals, so a file that clears this bar beats the true table value and changes its last printed digit. The table's keeper asks for improvements of any size. The value is below the listed upper bound where one is listed (bounds are rounded up). Starred rows and rows noted as proven optimal are excluded. Version 1.0.0 used a stricter bar (a gain of at least 1e-7, and at least 1e-8 below the bound). Its 731 files meet both.
 - Game of Sloanes: the coherence, max |<phi_j, phi_k>| over unit vectors, is at least 1e-7 smaller than the leaderboard value and is not below the listed lower bound. Rows marked provably optimal are excluded.
 - hsp4: the feasible radius, min(half the minimum centre distance, 1 - the largest centre norm), is at least 1e-7 larger than the table value for N and for every larger N in the table. (Removing balls from a packing for a larger N gives a packing for N, so a larger-N value is also a valid bound for N.)
 - scu: the feasible radius, min(half the minimum centre distance, 1/2 - the largest absolute coordinate), is at least 1e-7 larger than B(N), the largest table value for N or any larger N.
