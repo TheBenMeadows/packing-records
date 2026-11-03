@@ -50,6 +50,6 @@ The searches were designed and run with AI coding assistants. They were numerica
 
 ## Credit and license
 
-Found by Ben Meadows, 2026. Where a search started from a posted Packomania configuration, the author of that configuration is credited in `cells.csv`.
+Found by Benjamin Meadows, 2026. Where a search started from a posted Packomania configuration, the author of that configuration is credited in `cells.csv`.
 
 The coordinate files, the checker, the floor code and `cells.csv` are released under CC0 1.0 (see `LICENSE`). The files in `tables/` hold only facts extracted from the four public tables (dimensions, values, bounds and optimality marks), each with its source URL and the date read, so that the checker can run offline. The original tables remain the work of their keepers.
