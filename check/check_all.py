@@ -15,8 +15,18 @@ the keep rules hold on exact rationals:
   packomania-scu   r* >= B(N) + 1e-7 with B(N) = max over listed N' >= N of
                    r(N'), r* >= recorded polish floor + 1e-7, and every row's
                    radius column equals the first-line radius
+  cohn-harmonic    row not a simplex (N = n+1), cross polytope (N = 2n) or
+                   listed universal optimum; every stored vector has unit norm
+                   (|norm^2 - 1| <= 1e-20) and every coordinate has at least 25
+                   significant digits; with bar = min(table energy, 2021 data-set
+                   energy) and m = max(1e-9, 1e-12 E): E <= bar - m and the
+                   recorded floor (the polished posted 2021 configuration)
+                   >= E + m; the file header names the cell and its energy.
+                   Squared distances are exact rationals; the energy is a
+                   60-digit decimal evaluation from them (see exact.py), so every
+                   harmonic comparison carries a 1e-40 safety margin
 Table facts are read from tables/ and must equal the cells.csv columns. Each
-(table, cell) appears once, every file in the four output folders is listed,
+(table, cell) appears once, every file in the five output folders is listed,
 and the per-table counts match EXPECTED. The polish floor is a recorded number:
 this script checks the margin over it, and floor/polish.py recomputes it from
 the posted Packomania files. The last line printed is PASS or FAIL.
@@ -33,8 +43,10 @@ import exact  # noqa: E402
 
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
-EXPECTED = {'grassmannian': 747, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 159}
-FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu')
+HSAFE = Decimal('1e-40')
+EXPECTED = {'grassmannian': 747, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 216,
+            'cohn-harmonic': 31}
+FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu', 'cohn-harmonic')
 
 
 def tsv(fn):
@@ -53,6 +65,14 @@ def cohn():
 
 def sloanes():
     return {(int(r['d']), int(r['n'])): r for r in tsv('game_of_sloanes.tsv')}
+
+
+def harmonic_table():
+    # a tree without the harmonic table can still check the other four tables;
+    # any cohn-harmonic row then fails with a KeyError
+    if not os.path.exists(os.path.join(DATA, 'cohn_harmonic.tsv')):
+        return {}
+    return {(int(r['N']), int(r['n'])): r for r in tsv('cohn_harmonic.tsv')}
 
 
 def radius_table(fn):
@@ -150,8 +170,42 @@ def check_packomania(r, full, tab, tables):
     return msg, vd
 
 
+def check_harmonic(r, full, H):
+    msg = []
+    N, n = map(int, r['cell'].split('-'))
+    if r['file'] != 'cohn-harmonic/%d-%d.txt' % (N, n):
+        msg.append('file name does not match the cell')
+    row = H[(N, n)]
+    if N == n + 1 or N == 2 * n:
+        msg.append('row is a simplex or cross polytope')
+    if row['universal'] != 'no':
+        msg.append('row is a universal optimum')
+    if row['table_energy'] != r['table_value'] or row['energy_2021'] != r['bound']:
+        msg.append('table energy or 2021 energy differs from tables/')
+    head, rows = exact.read_harmonic(full, N, n)
+    if exact.harmonic_norm_defect(rows) > Fraction(1, 10 ** 20):
+        msg.append('a stored vector is not unit length')
+    if min(exact.significant_digits(x) or 99 for row_ in rows for x in row_) < 25:
+        msg.append('a coordinate has fewer than 25 significant digits')
+    d2, s2 = exact.harmonic_d2(rows)
+    E = exact.harmonic_energy(d2, s2, n)
+    m = max(Decimal('1e-9'), Decimal('1e-12') * E)
+    bar = min(Decimal(row['table_energy']), Decimal(row['energy_2021']))
+    if not E + m + HSAFE <= bar:
+        msg.append('does not beat min(table, 2021) by max(1e-9, 1e-12 E)')
+    if not r['floor']:
+        msg.append('no polish floor')
+    elif not Decimal(r['floor']) >= E + m + HSAFE:
+        msg.append('polished posted configuration is not above E + margin')
+    hf = head[0].split() if head else []
+    if len(hf) < 5 or hf[:3] != ['#', 'cell', '%d-%d' % (N, n)] or hf[3] != 'energy' \
+            or abs(Decimal(hf[4]) - E) > Decimal('1e-30'):
+        msg.append('header line does not state the cell and its energy')
+    return msg, E
+
+
 def main():
-    C, T = cohn(), sloanes()
+    C, T, H = cohn(), sloanes(), harmonic_table()
     tables = {}
     for tab, fn in (('packomania-hsp4', 'packomania_hsp4_radius.txt'), ('packomania-scu', 'packomania_scu_radius.txt')):
         radii = radius_table(fn)
@@ -177,6 +231,8 @@ def main():
                 m2, vd = check_sloanes(r, full, T)
             elif tab in tables:
                 m2, vd = check_packomania(r, full, tab, tables)
+            elif tab == 'cohn-harmonic':
+                m2, vd = check_harmonic(r, full, H)
             else:
                 raise ValueError('unknown table %r' % tab)
             msg += m2
@@ -191,6 +247,10 @@ def main():
         else:
             print('ok', tab, cell, r['our_value'])
     for sub in FOLDERS:
+        if not os.path.isdir(os.path.join(FINAL, sub)):
+            fails.append((sub, '', ['folder missing']))
+            print('FAIL', sub, 'folder missing')
+            continue
         for fn in sorted(os.listdir(os.path.join(FINAL, sub))):
             if fn.startswith('.'):
                 continue

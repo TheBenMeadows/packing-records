@@ -1,4 +1,4 @@
-"""Exact evaluation of the four objectives (Python standard library only).
+"""Exact evaluation of the five objectives (Python standard library only).
 
 Every coordinate in a submission file is a finite decimal string, so it is an
 exact rational. Each file is read into integer vectors at one common power of
@@ -16,6 +16,16 @@ Definitions:
                 unit ball centred at the origin.                         (max)
   scu           r* = min( min_{i<j} |c_i - c_j| / 2,
                           1/2 - max_i max_k |c_ik| ), cube [-1/2,1/2]^3. (max)
+  harmonic      E = sum_{i<j} |x_i - x_j|^-(n-2) over N unit vectors in R^n. (min)
+                The squared distances d2_ij are exact rationals. The energy needs
+                d2^-(n-2)/2, a real power when n is odd, so it is evaluated in
+                decimal at 60 significant digits from the exact d2: for even n,
+                1 / d2^((n-2)/2); for odd n, 1 / (d2^((n-3)/2) * sqrt(d2)), with
+                one correctly rounded division and square root per term. Each term
+                then has relative error below 1e-57 and the sum of at most
+                N(N-1)/2 < 10^5 terms has absolute error below 1e-50 for every
+                energy in the table (E < 10^5), far inside the 1e-40 safety margin
+                that check_all.py adds to every harmonic comparison.
 """
 from decimal import Decimal, getcontext
 from fractions import Fraction
@@ -102,6 +112,34 @@ def read_packomania(path, dim, N, radius_column):
     if len(rows) != N:
         raise ValueError('%d centre rows, expected N = %d' % (len(rows), N))
     return first, comments, rows
+
+
+def read_harmonic(path, N, n):
+    """'#' header line(s), then N lines of n comma-separated decimals."""
+    head, rows = [], []
+    for line in open(path):
+        s = line.strip()
+        if not s:
+            continue
+        if s.startswith('#'):
+            if rows:
+                raise ValueError('comment line after the coordinates')
+            head.append(s)
+            continue
+        f = [x.strip() for x in s.split(',')]
+        if len(f) != n:
+            raise ValueError('row with %d entries, expected n = %d' % (len(f), n))
+        rows.append(f)
+    if len(rows) != N:
+        raise ValueError('%d rows, expected N = %d' % (len(rows), N))
+    return head, rows
+
+
+def significant_digits(s):
+    """Number of significant digits in a decimal string (0 for an exact zero)."""
+    t = Decimal(s).as_tuple()
+    d = ''.join(map(str, t.digits)).lstrip('0')
+    return len(d)
 
 
 # ---------------------------------------------------------------- objectives
@@ -245,6 +283,43 @@ def unit_norm_defect(vals, d, n):
         s = sum(X[j * d + i] ** 2 + X[d * n + j * d + i] ** 2 for i in range(d))
         worst = max(worst, abs(Fraction(s, sc * sc) - 1))
     return worst
+
+
+def harmonic_d2(rows):
+    """Exact squared distances: (list of integer d2 over all pairs i<j, scale^2).
+    d2_ij = value / scale^2 exactly."""
+    P, sc = scale_rows(rows)
+    out = []
+    for i in range(len(P)):
+        a = P[i]
+        for j in range(i + 1, len(P)):
+            out.append(sum((x - y) * (x - y) for x, y in zip(a, P[j])))
+    return out, sc * sc
+
+
+def harmonic_norm_defect(rows):
+    """max over vectors of |norm^2 - 1| (Fraction)."""
+    P, sc = scale_rows(rows)
+    s2 = sc * sc
+    return max(abs(Fraction(sum(x * x for x in p), s2) - 1) for p in P)
+
+
+def harmonic_energy(d2, s2, n):
+    """Energy sum (d2/s2)^-(n-2)/2 in decimal at 60 significant digits."""
+    if n < 3:
+        raise ValueError('harmonic energy needs n >= 3')
+    S2 = Decimal(s2)
+    k, odd = divmod(n - 2, 2)
+    total = Decimal(0)
+    for v in d2:
+        if v <= 0:
+            raise ValueError('two points coincide')
+        x = Decimal(v) / S2                    # one rounding
+        den = x ** k if k else Decimal(1)      # integer power: at most k - 1 roundings
+        if odd:
+            den = den * x.sqrt()
+        total += 1 / den
+    return total
 
 
 # ---------------------------------------------------------------- printing
