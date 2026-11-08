@@ -44,9 +44,11 @@ import exact  # noqa: E402
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
 HSAFE = Decimal('1e-40')
-EXPECTED = {'grassmannian': 747, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 239,
-            'cohn-harmonic': 31}
-FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu', 'cohn-harmonic')
+EXPECTED = {'grassmannian': 1486, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 239,
+            'cohn-harmonic': 43, 'spherical-codes': 529, 'thomson': 1}
+FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu', 'cohn-harmonic',
+           'spherical-codes', 'thomson')
+E11, E6 = Fraction(1, 10 ** 11), Fraction(1, 10 ** 6)
 
 
 def tsv(fn):
@@ -59,8 +61,22 @@ def tsv(fn):
     return rows
 
 
-def cohn():
-    return {(int(r['m']), int(r['n']), int(r['N'])): r for r in tsv('cohn_grassmannian.tsv')}
+def cohn(read=''):
+    """The Grassmannian table as read on `read` (a cells.csv table_read date; blank = the 2026-11-01 snapshot)."""
+    fn = 'cohn_grassmannian_%s.tsv' % read if read else 'cohn_grassmannian.tsv'
+    return {(int(r['m']), int(r['n']), int(r['N'])): r for r in tsv(fn)}
+
+
+def spherical_table(read):
+    fn = os.path.join(DATA, 'spherical_codes_%s.csv' % read)
+    with open(fn, encoding='utf-8') as fh:
+        return {(int(r['d']), int(r['N'])): r for r in csv.DictReader(l for l in fh if not l.startswith('#'))}
+
+
+def thomson_table(read):
+    fn = os.path.join(DATA, 'thomson_%s.csv' % read)
+    with open(fn, encoding='utf-8') as fh:
+        return {int(r['N']): r for r in csv.DictReader(l for l in fh if not l.startswith('#'))}
 
 
 def sloanes():
@@ -113,6 +129,42 @@ def check_grassmannian(r, full, C):
     if row['bound'] and not val < Fraction(Decimal(row['bound'])):
         msg.append('not below the listed bound')
     return msg, vd
+
+
+def check_spherical(r, full, S):
+    msg = []
+    d, N = map(int, r['cell'].split('-'))
+    if r['file'] != 'spherical-codes/%d-%d.txt' % (d, N):
+        msg.append('file name does not match the cell')
+    row = S[(d, N)]
+    if row['proven_optimal'] == 'yes':
+        msg.append('row proven optimal')
+    if row['cos'] != r['table_value']:
+        msg.append('table value differs from tables/')
+    rows = exact.read_spherical(full, d, N)
+    if min(len(x.lower().split('e')[0].lstrip('+-').replace('.', '').lstrip('0')) for t in rows for x in t) < 20:
+        msg.append('a coordinate has fewer than 20 significant digits')
+    s, q, _, _ = exact.spherical_max_cos(rows)
+    if not exact.spherical_at_most(s, q, Fraction(Decimal(row['cos'])) - E11):
+        msg.append('does not beat the table cosine by 1e-11')
+    return msg, exact.spherical_value(s, q)
+
+
+def check_thomson(r, full, TH):
+    msg = []
+    N = int(r['cell'])
+    if r['file'] != 'thomson/%d.txt' % N:
+        msg.append('file name does not match the cell')
+    row = TH[N]
+    if row['bar'] != r['table_value']:
+        msg.append('table value differs from tables/')
+    rows = exact.read_spherical(full, 3, N)
+    if exact.thomson_norm_defect(rows) > Fraction(1, 10 ** 25):
+        msg.append('a stored point is not unit length to 1e-25')
+    E = exact.thomson_energy(rows)
+    if not Fraction(E) <= Fraction(Decimal(row['bar'])) - E6:
+        msg.append('does not beat the minimum over the live tables by 1e-6')
+    return msg, E
 
 
 def check_sloanes(r, full, T):
@@ -205,7 +257,14 @@ def check_harmonic(r, full, H):
 
 
 def main():
-    C, T, H = cohn(), sloanes(), harmonic_table()
+    T, H = sloanes(), harmonic_table()
+    snap = {}  # (table, table_read) -> snapshot, loaded on first use
+
+    def table_for(tab, read):
+        if (tab, read) not in snap:
+            snap[(tab, read)] = {'grassmannian': cohn, 'spherical-codes': spherical_table,
+                                 'thomson': thomson_table}[tab](read)
+        return snap[(tab, read)]
     tables = {}
     for tab, fn in (('packomania-hsp4', 'packomania_hsp4_radius.txt'), ('packomania-scu', 'packomania_scu_radius.txt')):
         radii = radius_table(fn)
@@ -226,7 +285,11 @@ def main():
                 if hashlib.sha256(fh.read()).hexdigest() != r['file_sha256']:
                     msg.append('sha256 mismatch')
             if tab == 'grassmannian':
-                m2, vd = check_grassmannian(r, full, C)
+                m2, vd = check_grassmannian(r, full, table_for(tab, r.get('table_read', '')))
+            elif tab == 'spherical-codes':
+                m2, vd = check_spherical(r, full, table_for(tab, r['table_read']))
+            elif tab == 'thomson':
+                m2, vd = check_thomson(r, full, table_for(tab, r['table_read']))
             elif tab == 'game-of-sloanes':
                 m2, vd = check_sloanes(r, full, T)
             elif tab in tables:
@@ -248,8 +311,9 @@ def main():
             print('ok', tab, cell, r['our_value'])
     for sub in FOLDERS:
         if not os.path.isdir(os.path.join(FINAL, sub)):
-            fails.append((sub, '', ['folder missing']))
-            print('FAIL', sub, 'folder missing')
+            if EXPECTED.get(sub):
+                fails.append((sub, '', ['folder missing']))
+                print('FAIL', sub, 'folder missing')
             continue
         for fn in sorted(os.listdir(os.path.join(FINAL, sub))):
             if fn.startswith('.'):
