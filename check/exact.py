@@ -359,3 +359,90 @@ def hsp4_at_most(D, M, T):
 
 def scu_at_most(D, A, T):
     return D <= 4 * T * T or A >= Fraction(1, 2) - T
+
+
+# ---------------------------------------------------------------- spherical codes (from version 1.3)
+
+def read_spherical(path, d, N):
+    """N rows of d comma-separated decimal strings ('#' lines allowed)."""
+    rows = []
+    for line in open(path):
+        s = line.strip()
+        if not s or s.startswith('#'):
+            continue
+        f = [x.strip() for x in s.split(',')]
+        if len(f) != d:
+            raise ValueError('row with %d entries, expected d = %d' % (len(f), d))
+        rows.append(f)
+    if len(rows) != N:
+        raise ValueError('%d rows, expected N = %d' % (len(rows), N))
+    return rows
+
+
+def spherical_max_cos(rows):
+    """Exact (s, q) with cos* = s / sqrt(q) the largest cosine over all pairs: s = <x_i, x_j>, q = |x_i|^2 |x_j|^2 (exact
+    integers at one common scale). Floats find the pairs within 1e-9 of the float maximum (float error is ~1e-15 here),
+    and exact integers decide among them."""
+    from operator import mul
+    P, _ = scale_rows(rows)
+    nn = [sum(x * x for x in p) for p in P]
+    if min(nn) == 0:
+        raise ValueError('zero vector')
+    F = [[x / (q ** 0.5) for x in p] for p, q in zip(P, nn)]
+    N = len(F)
+    top, cand = -2.0, []
+    for i in range(N):
+        a = F[i]
+        for j in range(i + 1, N):
+            c = sum(map(mul, a, F[j]))
+            if c > top - 1e-9:
+                if c > top:
+                    top = c
+                    cand = [x for x in cand if x[0] > top - 1e-9]
+                cand.append((c, i, j))
+    best = None
+    for _, i, j in cand:
+        s = sum(map(mul, P[i], P[j])); q = nn[i] * nn[j]
+        if best is None or _cos_gt(s, q, best[0], best[1]):
+            best = (s, q, i + 1, j + 1)
+    return best
+
+
+def _cos_gt(s1, q1, s2, q2):
+    """s1/sqrt(q1) > s2/sqrt(q2) exactly (q > 0)."""
+    if (s1 >= 0) != (s2 >= 0):
+        return s1 >= 0
+    a, b = s1 * s1 * q2, s2 * s2 * q1
+    return a > b if s1 >= 0 else a < b
+
+
+def spherical_at_most(s, q, T):
+    """s / sqrt(q) <= T exactly, for T > 0."""
+    return s <= 0 or s * s <= T * T * q
+
+
+def spherical_value(s, q):
+    return Decimal(s) / Decimal(q).sqrt()
+
+
+# ---------------------------------------------------------------- Thomson (from version 1.3)
+
+def thomson_energy(rows):
+    """Coulomb energy sum_{i<j} 1/|x_i - x_j| of the points normalised to unit length, in Decimal at 60 digits from
+    the exact rational coordinates (each term one correctly rounded square root and division; sum error < 1e-50)."""
+    P, sc = scale_rows(rows)
+    nn = [sum(x * x for x in p) for p in P]
+    U = [[Decimal(x) / Decimal(q).sqrt() for x in p] for p, q in zip(P, nn)]
+    E = Decimal(0)
+    for i in range(len(U)):
+        a = U[i]
+        for j in range(i):
+            b = U[j]
+            E += 1 / ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2).sqrt()
+    return E
+
+
+def thomson_norm_defect(rows):
+    """max_i | |x_i|^2 - 1 | over the stored (unnormalised) coordinates, exactly."""
+    P, sc = scale_rows(rows)
+    return max(abs(Fraction(sum(x * x for x in p), sc * sc) - 1) for p in P)
