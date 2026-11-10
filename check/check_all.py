@@ -10,8 +10,13 @@ the keep rules hold on exact rationals:
                    up); every stored basis is orthonormal to within 1e-20
   game-of-sloanes  row not provably optimal; mu <= table - 1e-7; mu >= lower
                    bound; every stored vector has unit norm to within 1e-15
-  packomania-hsp4  r* >= max over listed N' >= N of r(N') + 1e-7, and
-                   r* >= recorded polish floor + 1e-7
+  packomania-hsp4, packomania-hsp5, packomania-hsp6
+                   (balls in the unit ball of dimension 4, 5, 6)
+                   r* >= max over listed N' >= N of r(N') + 1e-7, and
+                   r* >= recorded floor + 1e-7. A row with a table_read date is
+                   checked against tables/packomania_<shelf>_radius_<date>.txt,
+                   the table as it read on that day; a blank table_read means
+                   the original snapshot (hsp4 only)
   packomania-scu   r* >= B(N) + 1e-7 with B(N) = max over listed N' >= N of
                    r(N'), r* >= recorded polish floor + 1e-7, and every row's
                    radius column equals the first-line radius
@@ -44,11 +49,14 @@ import exact  # noqa: E402
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
 HSAFE = Decimal('1e-40')
-EXPECTED = {'grassmannian': 1486, 'game-of-sloanes': 52, 'packomania-hsp4': 108, 'packomania-scu': 239,
-            'cohn-harmonic': 43, 'spherical-codes': 529, 'thomson': 1}
-FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-scu', 'cohn-harmonic',
+EXPECTED = {'grassmannian': 1486, 'game-of-sloanes': 52, 'packomania-hsp4': 152, 'packomania-hsp5': 198,
+            'packomania-hsp6': 161, 'packomania-scu': 239, 'cohn-harmonic': 43, 'spherical-codes': 529, 'thomson': 1}
+FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-hsp5', 'packomania-hsp6',
+           'packomania-scu', 'cohn-harmonic',
            'spherical-codes', 'thomson')
 E11, E6 = Fraction(1, 10 ** 11), Fraction(1, 10 ** 6)
+BALL_DIM = {'hsp4': 4, 'hsp5': 5, 'hsp6': 6}
+PACKOMANIA = ('packomania-hsp4', 'packomania-hsp5', 'packomania-hsp6', 'packomania-scu')
 
 
 def tsv(fn):
@@ -193,11 +201,12 @@ def check_sloanes(r, full, T):
 def check_packomania(r, full, tab, tables):
     msg = []
     N = int(r['cell'])
-    hs = tab == 'packomania-hsp4'
-    if r['file'] != ('packomania-hsp4/hsp4-%d.txt' % N if hs else 'packomania-scu/scu%d.txt' % N):
+    shelf = tab.split('-', 1)[1]
+    hs = shelf in BALL_DIM
+    if r['file'] != ('%s/%s-%d.txt' % (tab, shelf, N) if hs else 'packomania-scu/scu%d.txt' % N):
         msg.append('file name does not match the cell')
-    radii, bmax = tables[tab]
-    first, _, data = exact.read_packomania(full, 4 if hs else 3, N, radius_column=not hs)
+    radii, bmax = tables(tab, r.get('table_read', ''))
+    first, _, data = exact.read_packomania(full, BALL_DIM[shelf] if hs else 3, N, radius_column=not hs)
     if radii[N] != r['table_value']:
         msg.append('table value differs from tables/')
     if hs:
@@ -265,10 +274,13 @@ def main():
             snap[(tab, read)] = {'grassmannian': cohn, 'spherical-codes': spherical_table,
                                  'thomson': thomson_table}[tab](read)
         return snap[(tab, read)]
-    tables = {}
-    for tab, fn in (('packomania-hsp4', 'packomania_hsp4_radius.txt'), ('packomania-scu', 'packomania_scu_radius.txt')):
-        radii = radius_table(fn)
-        tables[tab] = (radii, suffix_max(radii))
+    psnap = {}  # (table, table_read) -> (radii, suffix maxima) of a Packomania table snapshot
+
+    def tables(tab, read):
+        if (tab, read) not in psnap:
+            radii = radius_table('packomania_%s_radius%s.txt' % (tab.split('-', 1)[1], '_' + read if read else ''))
+            psnap[(tab, read)] = (radii, suffix_max(radii))
+        return psnap[(tab, read)]
     with open(os.path.join(FINAL, 'cells.csv')) as fh:
         rows = list(csv.DictReader(fh))
     fails, listed, seen, count = [], set(), set(), {}
@@ -292,7 +304,7 @@ def main():
                 m2, vd = check_thomson(r, full, table_for(tab, r['table_read']))
             elif tab == 'game-of-sloanes':
                 m2, vd = check_sloanes(r, full, T)
-            elif tab in tables:
+            elif tab in PACKOMANIA:
                 m2, vd = check_packomania(r, full, tab, tables)
             elif tab == 'cohn-harmonic':
                 m2, vd = check_harmonic(r, full, H)
