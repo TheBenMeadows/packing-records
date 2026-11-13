@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 8 and 9 points in a cube. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 8 and 9 points in a cube. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Theorems
 
@@ -15,6 +15,8 @@ Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this
 | | `chs_orthoplex` | Among more than m(m+1)/2 projectors of rank n on R^m, two are at squared chordal distance at most n(m-n)/m. |
 | `Packing/Subspace.lean` | `chs_simplex_subspace`, `chs_orthoplex_subspace` | The same two bounds for subspaces of R^m of dimension n. |
 | `Packing/Cube.lean` | `isMaxMinDist_two`, `_three`, `_four`, `_eight`, `_nine` | The largest minimum distance among N points of the unit cube is sqrt(3), sqrt(2), sqrt(2), 1 and sqrt(3)/2 for N = 2, 3, 4, 8 and 9. |
+| `Packing/Cube5.lean` | `isMaxMinDist_five` | The largest minimum distance among 5 points of the unit cube is sqrt(5)/2. |
+| | `isMaxRadius_five` | The largest radius of 5 equal balls packed in the unit cube is (5 - 2 sqrt(5))/2. |
 | `Packing/CubeBalls.lean` | `maxRadius_of_maxMinDist` | If d is that largest minimum distance for N points, the largest radius of N equal balls packed in the unit cube is d/(2(1+d)). |
 | `Packing/Cert/Sound.lean` | `hasPacking_of_check` | If `check m n N k c` evaluates to `true`, there are N subspaces of dimension n in R^m that are pairwise at squared chordal distance at least k/10^10. |
 | `Packing/Cert/SoundLink.lean` | `spansPack_of_link` | If `checkLink m n R c K` also evaluates to `true`, those subspaces are the spans of the vectors in R, the vectors of the data file. |
@@ -63,7 +65,16 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 5, 6, 10 and 14 are solved in the literature and are not formalized here.
+- For points in a cube, N = 6, 10 and 14 are solved in the literature and are not formalized here. For N = 5 the value is proved and the uniqueness of the configuration is not.
+
+## Five points in a cube
+
+`Packing/Cube5.lean` follows Schaer's proof with strict inequalities. Take five points of the cube that are pairwise further apart than sqrt(5)/2. Among all points and all corners, take the pair with the least coordinatewise distance a. A reflection and a swap of coordinates move that corner to the origin and that point to (p1, p2, a) with p1, p2 <= a <= 1/2, and then every point has a coordinate at distance at least a from every corner. The proof then needs:
+
+1. No other point y has y1 + y2 + y3 <= 3/2 and y1 + y2 <= 3/2 - a, because such a point is within sqrt(5)/2 of (p1, p2, a).
+2. Two of the other four points have the same least coordinate, and two such points are within sqrt(5)/2 of each other.
+
+Both facts are polynomial inequalities on polytopes: 28 of degree 4 in four variables for the first, 5 of degree 3 in seven variables for the second. `gen/gen_n5.py` finds, for each one, nonnegative rational coefficients that write the difference of the two sides as a combination of products of the constraints. It checks that identity in exact arithmetic and writes the lemma to `Packing/Cube5Cert.lean` with the products as hints. Lean's `linarith` then proves the lemma from the hints and finds its own coefficients. The generated file is in the repository, so the build does not run the generator, which needs `numpy` and `scipy`.
 
 ## Cell certificates
 
@@ -138,5 +149,6 @@ These measurements on cell 11-2-60 decided the shape of `Check.lean`.
 - R. A. Rankin, "The closest packing of spherical caps in n dimensions", Proc. Glasgow Math. Assoc. 2 (1955), 139-144.
 - J. H. Conway, R. H. Hardin and N. J. A. Sloane, "Packing lines, planes, etc.: packings in Grassmannian spaces", Experimental Mathematics 5 (1996), 139-159.
 - J. Schaer, "On the densest packing of spheres in a cube", Canad. Math. Bull. 9 (1966), 265-270.
+- J. Schaer, "The densest packing of five spheres in a cube", Canad. Math. Bull. 9 (1966), 271-274.
 
 The Lean files and the generators were written with AI coding assistants. The Lean kernel checks every proof.
