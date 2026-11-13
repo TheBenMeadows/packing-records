@@ -28,3 +28,13 @@ import Packing
 #print axioms Packing.rankin_orthoplex_strict
 #print axioms Packing.chs_orthoplex_strict
 #print axioms Packing.chs_orthoplex_strict_subspace
+#print axioms Packing.Cert.spansPack_of_check
+#print axioms Packing.Cert.spansPack_of_link
+#print axioms Packing.Cert.hasSphericalCode_of_check
+#print axioms Packing.Cert.sphericalData_of_check
+#print axioms Packing.Cert.hasCoherence_of_check
+#print axioms Packing.Cert.coherenceData_of_check
+#print axioms Packing.Cert.hasBallPackingInBall_of_check
+#print axioms Packing.Cert.ballData_of_check
+#print axioms Packing.Cert.hasBallPackingInCube_of_check
+#print axioms Packing.Cert.cubeData_of_check

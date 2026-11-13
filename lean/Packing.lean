@@ -6,5 +6,12 @@ import Packing.Frame
 import Packing.Cube
 import Packing.CubeBalls
 import Packing.Cert.Check
+import Packing.Cert.CheckPoints
+import Packing.Cert.CheckLink
 import Packing.Cert.Sound
+import Packing.Cert.SoundPoints
+import Packing.Cert.SoundCoh
+import Packing.Cert.SoundLink
 import Packing.Cert.Test
+import Packing.Cert.TestPoints
+import Packing.Cert.TestLink
