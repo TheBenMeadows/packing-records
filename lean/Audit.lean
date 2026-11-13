@@ -26,6 +26,8 @@ import Packing
 #print axioms Packing.Cube.isMaxRadius_eight
 #print axioms Packing.Cube5.isMaxMinDist_five
 #print axioms Packing.Cube5.isMaxRadius_five
+#print axioms Packing.Cube6.isMaxMinDist_six
+#print axioms Packing.Cube6.isMaxRadius_six
 #print axioms Packing.card_le_two_mul_finrank_of_mem
 #print axioms Packing.rankin_orthoplex_strict
 #print axioms Packing.chs_orthoplex_strict

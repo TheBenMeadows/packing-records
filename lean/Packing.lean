@@ -7,6 +7,10 @@ import Packing.Cube
 import Packing.CubeBalls
 import Packing.Cube5Cert
 import Packing.Cube5
+import Packing.Cube6Prism
+import Packing.Cube6Cases
+import Packing.Cube6Core
+import Packing.Cube6
 import Packing.Cert.Check
 import Packing.Cert.CheckPoints
 import Packing.Cert.CheckLink

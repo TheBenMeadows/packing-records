@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 8 and 9 points in a cube. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Theorems
 
@@ -17,6 +17,8 @@ Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this
 | `Packing/Cube.lean` | `isMaxMinDist_two`, `_three`, `_four`, `_eight`, `_nine` | The largest minimum distance among N points of the unit cube is sqrt(3), sqrt(2), sqrt(2), 1 and sqrt(3)/2 for N = 2, 3, 4, 8 and 9. |
 | `Packing/Cube5.lean` | `isMaxMinDist_five` | The largest minimum distance among 5 points of the unit cube is sqrt(5)/2. |
 | | `isMaxRadius_five` | The largest radius of 5 equal balls packed in the unit cube is (5 - 2 sqrt(5))/2. |
+| `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
+| | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
 | `Packing/CubeBalls.lean` | `maxRadius_of_maxMinDist` | If d is that largest minimum distance for N points, the largest radius of N equal balls packed in the unit cube is d/(2(1+d)). |
 | `Packing/Cert/Sound.lean` | `hasPacking_of_check` | If `check m n N k c` evaluates to `true`, there are N subspaces of dimension n in R^m that are pairwise at squared chordal distance at least k/10^10. |
 | `Packing/Cert/SoundLink.lean` | `spansPack_of_link` | If `checkLink m n R c K` also evaluates to `true`, those subspaces are the spans of the vectors in R, the vectors of the data file. |
@@ -65,7 +67,7 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 6, 10 and 14 are solved in the literature and are not formalized here. For N = 5 the value is proved and the uniqueness of the configuration is not.
+- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. For N = 5 and N = 6 the value is proved and the uniqueness of the configuration is not.
 
 ## Five points in a cube
 
@@ -75,6 +77,20 @@ The families in these definitions are indexed, so two members can coincide. They
 2. Two of the other four points have the same least coordinate, and two such points are within sqrt(5)/2 of each other.
 
 Both facts are polynomial inequalities on polytopes: 28 of degree 4 in four variables for the first, 5 of degree 3 in seven variables for the second. `gen/gen_n5.py` finds, for each one, nonnegative rational coefficients that write the difference of the two sides as a combination of products of the constraints. It checks that identity in exact arithmetic and writes the lemma to `Packing/Cube5Cert.lean` with the products as hints. Lean's `linarith` then proves the lemma from the hints and finds its own coefficients. The generated file is in the repository, so the build does not run the generator, which needs `numpy` and `scipy`.
+
+## Six points in a cube
+
+`Packing/Cube6.lean` follows Schaer's proof with strict inequalities. Take six points of the cube that are pairwise further apart than 3 sqrt(2)/4, so at squared distance more than 9/8.
+
+1. A half-cube of side 1/2 has squared diameter 3/4, so the six points lie in six different half-cubes and two half-cubes are empty.
+2. `push`: two points in half-cubes that share a face are more than 3/4 apart across that face. Each is then within 1/4 of the opposite face of the cube.
+3. `prism_three`: a slab `[0,1] x [0,1] x [0,1/4]` does not hold three of the points.
+4. `layer_full`: the four half-cubes of one layer do not all hold a point. Steps 2 and 3 would confine the other two points to a box of side 1/2. So every layer has an empty half-cube, and the two empty half-cubes are opposite.
+5. `six_normal`: with the empty half-cubes at (0,0,0) and (1,1,1), steps 2 and 3 put the three points nearest the origin in the cube `[0, 3/4]^3`, where two of three points are at squared distance at most 9/8.
+
+Step 3 is the one inequality here that is not a bound on a diameter. For three points in three given quadrants of the square, `gen/n6_prism_search.py` finds by linear programming three nonnegative polynomials of degree 2, one per pair of points, and a nonnegative combination of products of the constraints, such that the sum of the polynomials times `9/8 - d^2` equals that combination. `gen/gen_n6_prism.py` solves for exact rational coefficients on the support the search found, checks the identity in exact arithmetic and writes `Packing/Cube6Prism.lean`. Two of the three polynomials contain the squares of `y` and of `1/2 - y` for the same coordinate y, so they do not vanish together, and the three strict inequalities give a contradiction. The other quadrant assignments follow by the reflections `x -> 1 - x` and `y -> 1 - y` (`Packing/Cube6Cases.lean`).
+
+`Packing/Cube6Cases.lean`, `Packing/Cube6Core.lean` and `Packing/Cube6.lean` are case analyses written by `gen/gen_n6_cases.py`, `gen/gen_n6_core.py` and `gen/gen_n6_glue.py`. All four generated files are in the repository. The four files take about half an hour to compile on one core.
 
 ## Cell certificates
 
@@ -150,5 +166,6 @@ These measurements on cell 11-2-60 decided the shape of `Check.lean`.
 - J. H. Conway, R. H. Hardin and N. J. A. Sloane, "Packing lines, planes, etc.: packings in Grassmannian spaces", Experimental Mathematics 5 (1996), 139-159.
 - J. Schaer, "On the densest packing of spheres in a cube", Canad. Math. Bull. 9 (1966), 265-270.
 - J. Schaer, "The densest packing of five spheres in a cube", Canad. Math. Bull. 9 (1966), 271-274.
+- J. Schaer, "The densest packing of six spheres in a cube", Canad. Math. Bull. 9 (1966), 275-280.
 
 The Lean files and the generators were written with AI coding assistants. The Lean kernel checks every proof.
