@@ -259,10 +259,12 @@ theorem check_iff {m n N k : ℕ} {c : List Frame} :
     sumMap_one]
   exact Iff.rfl
 
-/-- The spans of the lists of `R` have dimension `n` and are pairwise at squared chordal distance
-at least `t`. -/
-def SpansPack (m n : ℕ) (t : ℝ) (R : List Frame) : Prop :=
-  (∀ i : Fin R.length, finrank ℝ (frameSpan m (R.get i)) = n) ∧
+/-- `R` holds `N` lists of `n` vectors with `m` entries each; the span of each list has
+dimension `n`, and every two spans are at squared chordal distance at least `t`. -/
+def SpansPack (m n N : ℕ) (t : ℝ) (R : List Frame) : Prop :=
+  R.length = N ∧
+    (∀ i : Fin R.length, (R.get i).length = n ∧ ∀ v ∈ R.get i, v.e.length = m) ∧
+    (∀ i : Fin R.length, finrank ℝ (frameSpan m (R.get i)) = n) ∧
     ∀ i j : Fin R.length, i ≠ j →
       t ≤ subspaceChordalSq (frameSpan m (R.get i)) (frameSpan m (R.get j))
 
@@ -270,8 +272,8 @@ def SpansPack (m n : ℕ) (t : ℝ) (R : List Frame) : Prop :=
 vectors whose spans have dimension `n` and are pairwise at squared chordal distance at least
 `k / 10^10`. -/
 theorem spansPack_of_check {m n N k : ℕ} {c : List Frame} (h : check m n N k c = true) :
-    c.length = N ∧ (∀ i : Fin c.length, (c.get i).length = n ∧ OkFrame m (c.get i)) ∧
-      SpansPack m n ((k : ℝ) / 10 ^ 10) c := by
+    (∀ i : Fin c.length, (c.get i).length = n ∧ OkFrame m (c.get i)) ∧
+      SpansPack m n N ((k : ℝ) / 10 ^ 10) c := by
   obtain ⟨hN, hk, hok, hpair⟩ := check_iff.mp h
   have hok' : ∀ i : Fin c.length, (c.get i).length = n ∧ OkFrame m (c.get i) :=
     fun i => okFrame_iff.mp (hok _ (List.get_mem c i))
@@ -296,7 +298,7 @@ theorem spansPack_of_check {m n N k : ℕ} {c : List Frame} (h : check m n N k c
     have e : ((n : ℝ) * 10 ^ 10 - k) * 10 ^ 30 / 10 ^ 40 = n - (k : ℝ) / 10 ^ 10 := by
       ring
     linarith
-  refine ⟨hN, hok', fun i => ?_, fun i j hij => ?_⟩
+  refine ⟨hok', hN, fun i => ⟨(hok' i).1, (hok' i).2.len⟩, fun i => ?_, fun i j hij => ?_⟩
   · rw [finrank_frameSpan (hok' i).2, (hok' i).1]
   · rcases lt_or_gt_of_ne hij with h | h
     · exact key i j h
@@ -308,7 +310,7 @@ subspaces of dimension `n` in `ℝ^m` that are pairwise at squared chordal dista
 `k / 10^10`. -/
 theorem hasPacking_of_check {m n N k : ℕ} {c : List Frame} (h : check m n N k c = true) :
     HasPacking m n N ((k : ℝ) / 10 ^ 10) := by
-  obtain ⟨hN, -, h1, h2⟩ := spansPack_of_check h
+  obtain ⟨-, hN, -, h1, h2⟩ := spansPack_of_check h
   subst hN
   exact ⟨fun i => frameSpan m (c.get i), h1, h2⟩
 

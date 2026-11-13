@@ -1,7 +1,7 @@
 #!/opt/homebrew/bin/python3
 """Write the Lean link files for the Grassmannian cells.
 
-Usage: gen_links.py [CELL ...]
+Usage: gen_links.py [--lists] [CELL ...]
 
 A link file ties the frames of a cell file (Packing/Cert/Cells/C_<m>_<n>_<N>.lean,
 written by gen_cert.py) to the vectors of grassmannian/<cell>.txt. It holds the
@@ -19,6 +19,8 @@ Writes, under lean/:
 
 With no CELL every Grassmannian cell is written. With CELLs only those link
 files are written, and AllLinks.lean and the manifest are left as they are.
+With --lists alone, AllLinks.lean and the manifest are written and the link
+files are left as they are.
 
 The bound k of a cell is read from cells_manifest.tsv. Each data file must have
 the sha256 that cells.csv records.
@@ -66,9 +68,11 @@ def lean_coef(big, pq):
     return '⟨%d, [%s]⟩' % (big, ', '.join('(%d, %d)' % x for x in pq))
 
 
-def write_cell(outdir, cell, row):
+def write_cell(outdir, cell, row, write=True):
     sha = pinned_sha(row)
     m, n, N = (int(x) for x in cell.split('-'))
+    if not write:
+        return m, n, N, sha
     _, rows = exact.read_grassmannian(os.path.join(ROOT, row['file']), m, n, N)
     A, _ = exact.scale_rows(rows)
     blocks = [A[i * n:(i + 1) * n] for i in range(N)]
@@ -110,10 +114,10 @@ def write_all(done):
             '/-- The %d subspaces spanned by the vectors of `grassmannian/%d-%d-%d.txt` have'
             ' dimension %d and are pairwise at squared chordal distance at least'
             ' `%d / 10^10`. -/' % (N, m, n, N, n, k),
-            'theorem packing_file_%d_%d_%d : SpansPack %d %d (%d / 10 ^ 10) Cells.r_%d_%d_%d := by'
-            % (m, n, N, m, n, k, m, n, N),
+            'theorem packing_file_%d_%d_%d :' % (m, n, N),
+            '    SpansPack %d %d %d (%d / 10 ^ 10) Cells.r_%d_%d_%d := by' % (m, n, N, k, m, n, N),
             '  simpa only [Nat.cast_ofNat] using',
-            '    (spansPack_of_link Cells.ok_%d_%d_%d Cells.link_%d_%d_%d).2' % (m, n, N, m, n, N),
+            '    spansPack_of_link Cells.ok_%d_%d_%d Cells.link_%d_%d_%d' % (m, n, N, m, n, N),
             '']
     lines += ['end Packing.Cert', '']
     with open(os.path.join(LEAN, 'Packing', 'Cert', 'AllLinks.lean'), 'w') as f:
@@ -121,6 +125,8 @@ def write_all(done):
 
 
 def main(argv):
+    lists_only = argv == ['--lists']
+    argv = [] if lists_only else argv
     table = {r['cell']: r for r in csv.DictReader(open(os.path.join(ROOT, 'cells.csv')))
              if r['table'] == 'grassmannian'}
     bounds = {r['cell']: int(r['k']) for r in csv.DictReader(
@@ -129,7 +135,7 @@ def main(argv):
     os.makedirs(outdir, exist_ok=True)
     done = []
     for cell in argv or sorted(table, key=lambda c: [int(x) for x in c.split('-')]):
-        m, n, N, sha = write_cell(outdir, cell, table[cell])
+        m, n, N, sha = write_cell(outdir, cell, table[cell], write=not lists_only)
         done.append((cell, m, n, N, bounds[cell], sha))
     if argv:
         return 0

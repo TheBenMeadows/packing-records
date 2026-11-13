@@ -174,12 +174,12 @@ theorem frameSpan_eq_of_link {n : ℕ} {rows frame : List Vec} {ks : List Coef}
 end Link
 
 /-- **Soundness of `checkLink`.** If `check m n N k c` and `checkLink m n R c K` both evaluate
-to `true`, then `R` holds `N` lists of vectors whose spans have dimension `n` and are pairwise at
-squared chordal distance at least `k / 10^10`. -/
+to `true`, then `R` holds `N` lists of `n` vectors with `m` entries whose spans have dimension
+`n` and are pairwise at squared chordal distance at least `k / 10^10`. -/
 theorem spansPack_of_link {m n N k : ℕ} {R c : List Frame} {K : List (List Coef)}
     (hc : check m n N k c = true) (hl : checkLink m n R c K = true) :
-    R.length = N ∧ SpansPack m n ((k : ℝ) / 10 ^ 10) R := by
-  obtain ⟨hN, hok, hfin, hpair⟩ := spansPack_of_check hc
+    SpansPack m n N ((k : ℝ) / 10 ^ 10) R := by
+  obtain ⟨hok, hN, -, hfin, hpair⟩ := spansPack_of_check hc
   have hF₂ : List.Forall₂ (fun rows frame => ∃ ks, linkFrame m n rows frame ks = true) R c :=
     all3_forall₂ (fun _ _ ks h => ⟨ks, h⟩) hl
   obtain ⟨hlen, hget⟩ := List.forall₂_iff_get.mp hF₂
@@ -188,7 +188,13 @@ theorem spansPack_of_link {m n N k : ℕ} {R c : List Frame} {K : List (List Coe
     intro i
     obtain ⟨ks, hks⟩ := hget i i.isLt (hlen ▸ i.isLt)
     exact frameSpan_eq_of_link (hok _).2 (hok _).1 hks
-  refine ⟨hlen.trans hN, fun i => ?_, fun i j hij => ?_⟩
+  have hshape : ∀ i : Fin R.length,
+      (R.get i).length = n ∧ ∀ v ∈ R.get i, v.e.length = m := by
+    intro i
+    obtain ⟨ks, hks⟩ := hget i i.isLt (hlen ▸ i.isLt)
+    obtain ⟨hn, hr, -⟩ := linkFrame_iff.mp hks
+    exact ⟨hn, fun v hv => (okVec0_iff.mp (hr v hv)).len⟩
+  refine ⟨hlen.trans hN, hshape, fun i => ?_, fun i j hij => ?_⟩
   · rw [heq i]
     exact hfin _
   · rw [heq i, heq j]

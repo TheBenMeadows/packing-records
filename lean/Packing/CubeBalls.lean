@@ -14,7 +14,7 @@ namespace Packing.Cube
 /-- `c` gives the centres of `N` balls of radius `r` that lie in the unit cube and have pairwise
 disjoint interiors. -/
 def IsBallPacking (N : ℕ) (r : ℝ) (c : Fin N → Pt) : Prop :=
-  (∀ i k, r ≤ c i k ∧ c i k ≤ 1 - r) ∧ ∀ i j, i ≠ j → 2 * r ≤ dist (c i) (c j)
+  0 ≤ r ∧ (∀ i k, r ≤ c i k ∧ c i k ≤ 1 - r) ∧ ∀ i j, i ≠ j → 2 * r ≤ dist (c i) (c j)
 
 /-- `r` is the largest radius of `N` equal balls packed in the unit cube. -/
 def IsMaxRadius (N : ℕ) (r : ℝ) : Prop :=
@@ -46,7 +46,7 @@ theorem maxRadius_of_maxMinDist {N : ℕ} {d : ℝ} (hd : 0 < d) (h : IsMaxMinDi
     rw [h12]
     positivity
   refine ⟨⟨fun i => affine (1 - 2 * (d / (2 * (1 + d)))) (d / (2 * (1 + d))) (p i),
-    fun i k => ?_, fun i j hij => ?_⟩, fun r' c hc => ?_⟩
+    hr0.le, fun i k => ?_, fun i j hij => ?_⟩, fun r' c hc => ?_⟩
   · rw [affine_apply]
     have hpk := hp i k
     constructor
@@ -63,7 +63,7 @@ theorem maxRadius_of_maxMinDist {N : ℕ} {d : ℝ} (hd : 0 < d) (h : IsMaxMinDi
   · by_cases hr' : r' ≤ 0
     · linarith
     push Not at hr'
-    obtain ⟨hbox, hsep'⟩ := hc
+    obtain ⟨-, hbox, hsep'⟩ := hc
     obtain ⟨i₀, j₀, hij₀, -⟩ := hub p hp
     by_cases hhalf : 1 / 2 ≤ r'
     · -- then every centre is the centre of the cube, and two balls coincide

@@ -17,11 +17,11 @@ def HasSphericalCode (d N : ℕ) (t : ℝ) : Prop :=
   ∃ x : Fin N → EuclideanSpace ℝ (Fin d),
     (∀ i, ‖x i‖ = 1) ∧ ∀ i j, i ≠ j → ⟪x i, x j⟫_ℝ ≤ t
 
-/-- There are `N` balls of radius `r` inside the unit ball of `ℝ^d` with pairwise disjoint
+/-- There are `N` balls of radius `r ≥ 0` inside the unit ball of `ℝ^d` with pairwise disjoint
 interiors, described by their centres: every centre has norm at most `1 - r` and every two
 centres are at distance at least `2r`. -/
 def HasBallPackingInBall (d N : ℕ) (r : ℝ) : Prop :=
-  ∃ c : Fin N → EuclideanSpace ℝ (Fin d),
+  0 ≤ r ∧ ∃ c : Fin N → EuclideanSpace ℝ (Fin d),
     (∀ i, ‖c i‖ ≤ 1 - r) ∧ ∀ i j, i ≠ j → 2 * r ≤ dist (c i) (c j)
 
 /-- There are `N` balls of radius `r` inside the unit cube with pairwise disjoint interiors,
@@ -175,15 +175,17 @@ end Vectors
 
 /-! ### Spherical codes -/
 
-/-- The vectors of `c` are nonzero and their pairwise cosines are at most `t`. -/
-def SphericalData (m : ℕ) (t : ℝ) (c : List Vec) : Prop :=
-  (∀ i : Fin c.length, toVec m (c.get i) ≠ 0) ∧
+/-- `c` holds `N` vectors with `m` entries each; they are nonzero and their pairwise cosines are
+at most `t`. -/
+def SphericalData (m N : ℕ) (t : ℝ) (c : List Vec) : Prop :=
+  c.length = N ∧ (∀ v ∈ c, v.e.length = m) ∧
+    (∀ i : Fin c.length, toVec m (c.get i) ≠ 0) ∧
     ∀ i j : Fin c.length, i ≠ j →
       ⟪toVec m (c.get i), toVec m (c.get j)⟫_ℝ
         ≤ t * (‖toVec m (c.get i)‖ * ‖toVec m (c.get j)‖)
 
 theorem sphericalData_of_check {m N t : ℕ} {c : List Vec} (h : checkSph m N t c = true) :
-    c.length = N ∧ SphericalData m ((t : ℝ) / 10 ^ 12) c := by
+    SphericalData m N ((t : ℝ) / 10 ^ 12) c := by
   obtain ⟨hN, hok, hpair⟩ := checkSph_iff.mp h
   have hok' : ∀ i : Fin c.length, OkVec m (c.get i) ∧ 1 ≤ (c.get i).nsq :=
     fun i => okVec_iff.mp (hok _ (List.get_mem c i))
@@ -191,15 +193,17 @@ theorem sphericalData_of_check {m N t : ℕ} {c : List Vec} (h : checkSph m N t 
       ⟪toVec m (c.get i), toVec m (c.get j)⟫_ℝ
         ≤ (t : ℝ) / 10 ^ 12 * (‖toVec m (c.get i)‖ * ‖toVec m (c.get j)‖) :=
     fun i j hij => inner_le_of_cosB (hok' i).1 (hok' j).1 (List.pairwise_iff_get.mp hpair i j hij)
-  refine ⟨hN, fun i => toVec_ne_zero (hok' i).1 (hok' i).2, fun i j hij => ?_⟩
+  refine ⟨hN, fun v hv => (okVec_iff.mp (hok v hv)).1.len,
+    fun i => toVec_ne_zero (hok' i).1 (hok' i).2, fun i j hij => ?_⟩
   rcases lt_or_gt_of_ne hij with h1 | h1
   · exact key i j h1
   · rw [real_inner_comm, mul_comm ‖toVec m (c.get i)‖]
     exact key j i h1
 
-theorem hasSphericalCode_of_data {m : ℕ} {t : ℝ} {c : List Vec} (h : SphericalData m t c) :
-    HasSphericalCode m c.length t := by
-  obtain ⟨h0, hle⟩ := h
+theorem hasSphericalCode_of_data {m N : ℕ} {t : ℝ} {c : List Vec} (h : SphericalData m N t c) :
+    HasSphericalCode m N t := by
+  obtain ⟨hN, -, h0, hle⟩ := h
+  subst hN
   refine ⟨fun i => ‖toVec m (c.get i)‖⁻¹ • toVec m (c.get i), fun i => ?_, fun i j hij => ?_⟩
   · rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ (norm_ne_zero_iff.mpr (h0 i))]
   · have hi : ‖toVec m (c.get i)‖⁻¹ * ‖toVec m (c.get i)‖ = 1 :=
@@ -219,10 +223,8 @@ theorem hasSphericalCode_of_data {m : ℕ} {t : ℝ} {c : List Vec} (h : Spheric
 
 /-- **Soundness of `checkSph`.** -/
 theorem hasSphericalCode_of_check {m N t : ℕ} {c : List Vec} (h : checkSph m N t c = true) :
-    HasSphericalCode m N ((t : ℝ) / 10 ^ 12) := by
-  obtain ⟨hN, hd⟩ := sphericalData_of_check h
-  subst hN
-  exact hasSphericalCode_of_data hd
+    HasSphericalCode m N ((t : ℝ) / 10 ^ 12) :=
+  hasSphericalCode_of_data (sphericalData_of_check h)
 
 /-! ### Balls in the unit ball -/
 
@@ -230,14 +232,16 @@ theorem hasSphericalCode_of_check {m N t : ℕ} {c : List Vec} (h : checkSph m N
 noncomputable def toPt (m S : ℕ) (v : Vec) : EuclideanSpace ℝ (Fin m) :=
   ((S : ℝ)⁻¹) • toVec m v
 
-/-- The points of `c` are centres of balls of radius `r` inside the unit ball with pairwise
-disjoint interiors. -/
-def BallData (m S : ℕ) (r : ℝ) (c : List Vec) : Prop :=
-  (∀ i : Fin c.length, ‖toPt m S (c.get i)‖ ≤ 1 - r) ∧
+/-- `c` holds `N` vectors with `m` entries each and the scale `S` is positive; divided by `S`,
+they are centres of balls of radius `r ≥ 0` inside the unit ball with pairwise disjoint
+interiors. -/
+def BallData (m N S : ℕ) (r : ℝ) (c : List Vec) : Prop :=
+  c.length = N ∧ 0 < S ∧ 0 ≤ r ∧ (∀ v ∈ c, v.e.length = m) ∧
+    (∀ i : Fin c.length, ‖toPt m S (c.get i)‖ ≤ 1 - r) ∧
     ∀ i j : Fin c.length, i ≠ j → 2 * r ≤ dist (toPt m S (c.get i)) (toPt m S (c.get j))
 
 theorem ballData_of_check {m N t S : ℕ} {c : List Vec} (h : checkBall m N t S c = true) :
-    c.length = N ∧ BallData m S ((t : ℝ) / 10 ^ 12) c := by
+    BallData m N S ((t : ℝ) / 10 ^ 12) c := by
   obtain ⟨hN, hS, ht, hok, hnorm, hpair⟩ := checkBall_iff.mp h
   have hSR : (0 : ℝ) < S := by exact_mod_cast hS
   have htR : (t : ℝ) / 10 ^ 12 ≤ 1 := by
@@ -252,7 +256,8 @@ theorem ballData_of_check {m N t S : ℕ} {c : List Vec} (h : checkBall m N t S 
     rw [toPt, toPt, dist_eq_norm, ← smul_sub, norm_smul, norm_inv, Real.norm_natCast,
       le_inv_mul_iff₀ hSR]
     linarith
-  refine ⟨hN, fun i => ?_, fun i j hij => ?_⟩
+  refine ⟨hN, hS, by positivity, fun v hv => (okVec0_iff.mp (hok v hv)).len, fun i => ?_,
+    fun i j hij => ?_⟩
   · have hn := (Nat.cast_le (α := ℝ)).mpr (hnorm _ (List.get_mem c i))
     rw [Nat.cast_mul, Nat.cast_mul, Nat.cast_mul, Nat.cast_sub ht] at hn
     simp only [Nat.cast_mul, Nat.cast_pow, Nat.cast_ofNat] at hn
@@ -272,16 +277,16 @@ theorem ballData_of_check {m N t S : ℕ} {c : List Vec} (h : checkBall m N t S 
     · rw [dist_comm]
       exact key j i h1
 
-theorem hasBallPackingInBall_of_data {m S : ℕ} {r : ℝ} {c : List Vec} (h : BallData m S r c) :
-    HasBallPackingInBall m c.length r :=
-  ⟨fun i => toPt m S (c.get i), h.1, h.2⟩
+theorem hasBallPackingInBall_of_data {m N S : ℕ} {r : ℝ} {c : List Vec}
+    (h : BallData m N S r c) : HasBallPackingInBall m N r := by
+  obtain ⟨hN, -, hr, -, h1, h2⟩ := h
+  subst hN
+  exact ⟨hr, fun i => toPt m S (c.get i), h1, h2⟩
 
 /-- **Soundness of `checkBall`.** -/
 theorem hasBallPackingInBall_of_check {m N t S : ℕ} {c : List Vec}
-    (h : checkBall m N t S c = true) : HasBallPackingInBall m N ((t : ℝ) / 10 ^ 12) := by
-  obtain ⟨hN, hd⟩ := ballData_of_check h
-  subst hN
-  exact hasBallPackingInBall_of_data hd
+    (h : checkBall m N t S c = true) : HasBallPackingInBall m N ((t : ℝ) / 10 ^ 12) :=
+  hasBallPackingInBall_of_data (ballData_of_check h)
 
 /-! ### Balls in the unit cube -/
 
@@ -290,9 +295,15 @@ scale `S`, moved from the cube `[-1/2,1/2]^3` of the file by `1/2` in each coord
 noncomputable def toCubePt (S : ℕ) (v : Vec) : Cube.Pt :=
   Cube.affine (1 / (S : ℝ)) (1 / 2) (toVec 3 v)
 
+/-- `c` holds `N` vectors with 3 entries each and the scale `S` is positive; divided by `S` and
+moved to the unit cube, they are centres of balls of radius `r ≥ 0` inside the unit cube with
+pairwise disjoint interiors. -/
+def CubeData (N S : ℕ) (r : ℝ) (c : List Vec) : Prop :=
+  c.length = N ∧ 0 < S ∧ (∀ v ∈ c, v.e.length = 3) ∧
+    Cube.IsBallPacking c.length r (fun i => toCubePt S (c.get i))
+
 theorem cubeData_of_check {N t S : ℕ} {c : List Vec} (h : checkCube N t S c = true) :
-    c.length = N ∧
-      Cube.IsBallPacking c.length ((t : ℝ) / 10 ^ 12) (fun i => toCubePt S (c.get i)) := by
+    CubeData N S ((t : ℝ) / 10 ^ 12) c := by
   obtain ⟨hN, hS, ht, hok, hbox, hpair⟩ := checkCube_iff.mp h
   have hSR : (0 : ℝ) < S := by exact_mod_cast hS
   have hok' : ∀ i : Fin c.length, OkVec 3 (c.get i) :=
@@ -308,7 +319,8 @@ theorem cubeData_of_check {N t S : ℕ} {c : List Vec} (h : checkCube N t S c = 
           ring
       _ ≤ ‖toVec 3 (c.get i) - toVec 3 (c.get j)‖ ^ 2 :=
           pow_le_pow_left₀ (by positivity) hfar 2
-  refine ⟨hN, fun i k => ?_, fun i j hij => ?_⟩
+  refine ⟨hN, hS, fun v hv => (okVec0_iff.mp (hok v hv)).len, by positivity, fun i k => ?_,
+    fun i j hij => ?_⟩
   · have hlen : (k : ℕ) < (c.get i).e.length := by
       rw [(hok' i).len]
       exact k.isLt
@@ -343,7 +355,7 @@ theorem cubeData_of_check {N t S : ℕ} {c : List Vec} (h : checkCube N t S c = 
 /-- **Soundness of `checkCube`.** -/
 theorem hasBallPackingInCube_of_check {N t S : ℕ} {c : List Vec}
     (h : checkCube N t S c = true) : HasBallPackingInCube N ((t : ℝ) / 10 ^ 12) := by
-  obtain ⟨hN, hd⟩ := cubeData_of_check h
+  obtain ⟨hN, -, -, hd⟩ := cubeData_of_check h
   subst hN
   exact ⟨_, hd⟩
 

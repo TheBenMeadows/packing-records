@@ -1,7 +1,7 @@
 #!/opt/homebrew/bin/python3
 """Write the Lean certificate files for the point tables.
 
-Usage: gen_points.py [TABLE[:CELL] ...]
+Usage: gen_points.py [--lists] [TABLE[:CELL] ...]
 
 Tables: spherical-codes, game-of-sloanes, packomania-hsp4, packomania-hsp5,
 packomania-hsp6, packomania-scu. Reads cells.csv and the data files from the
@@ -12,13 +12,16 @@ repository root and writes, under lean/:
                                        `check... = true`, closed by kernel
                                        evaluation (P = S, G, H4, H5, H6, U)
   Packing/Cert/AllPoints.lean          two theorems per cell: a configuration
-                                       exists, and the data are one
+                                       exists, and the data (the stated number
+                                       of vectors, each with the stated number
+                                       of entries) are one
   points_manifest.tsv                  table, cell, module, t, table value t,
                                        sha256 of the data file, cost
 
 With no argument every cell of the six tables is written. With arguments only
 the named tables or cells are written, and AllPoints.lean and the manifest are
-left as they are.
+left as they are. With --lists alone, AllPoints.lean and the manifest are
+written and the cell files are left as they are.
 
 The Lean data of a cell are the numbers of its file multiplied by one power of
 ten. Each data file must have the sha256 that cells.csv records.
@@ -96,8 +99,9 @@ def spherical(row, path):
             % (name, lean_list(lean_vec(p) for p in P), name, d, N, t, name))
     thms = [('sph_%s' % name, 'HasSphericalCode %d %d (%d / 10 ^ 12)' % (d, N, t),
              'hasSphericalCode_of_check Cells.ok_sph_%s' % name),
-            ('sph_file_%s' % name, 'SphericalData %d (%d / 10 ^ 12) Cells.s_%s' % (d, t, name),
-             '(sphericalData_of_check Cells.ok_sph_%s).2' % name)]
+            ('sph_file_%s' % name,
+             'SphericalData %d %d (%d / 10 ^ 12) Cells.s_%s' % (d, N, t, name),
+             'sphericalData_of_check Cells.ok_sph_%s' % name)]
     return name, lean, thms, t, N * N * d
 
 
@@ -115,8 +119,9 @@ def sloanes(row, path):
             % (name, lean_list(items), name, d, N, t, name))
     thms = [('gos_%s' % name, 'HasCoherence %d %d (%d / 10 ^ 12)' % (d, N, t),
              'hasCoherence_of_check Cells.ok_gos_%s' % name),
-            ('gos_file_%s' % name, 'CoherenceData %d (%d / 10 ^ 12) Cells.g_%s' % (d, t, name),
-             '(coherenceData_of_check Cells.ok_gos_%s).2' % name)]
+            ('gos_file_%s' % name,
+             'CoherenceData %d %d (%d / 10 ^ 12) Cells.g_%s' % (d, N, t, name),
+             'coherenceData_of_check Cells.ok_gos_%s' % name)]
     return name, lean, thms, t, 4 * N * N * d
 
 
@@ -133,8 +138,8 @@ def ball(row, path):
     thms = [('%s_%s' % (tag, name), 'HasBallPackingInBall %d %d (%d / 10 ^ 12)' % (dim, N, t),
              'hasBallPackingInBall_of_check Cells.ok_%s_%s' % (tag, name)),
             ('%s_file_%s' % (tag, name),
-             'BallData %d %d (%d / 10 ^ 12) Cells.h%d_%s' % (dim, S, t, dim, name),
-             '(ballData_of_check Cells.ok_%s_%s).2' % (tag, name))]
+             'BallData %d %d %d (%d / 10 ^ 12) Cells.h%d_%s' % (dim, N, S, t, dim, name),
+             'ballData_of_check Cells.ok_%s_%s' % (tag, name))]
     return name, lean, thms, t, N * N * dim
 
 
@@ -150,10 +155,8 @@ def cube(row, path):
             % (name, lean_list(lean_vec(p) for p in P), name, N, t, S, name))
     thms = [('scu_%s' % name, 'HasBallPackingInCube %d (%d / 10 ^ 12)' % (N, t),
              'hasBallPackingInCube_of_check Cells.ok_scu_%s' % name),
-            ('scu_file_%s' % name,
-             'Cube.IsBallPacking Cells.u_%s.length (%d / 10 ^ 12) '
-             '(fun i => toCubePt %d (Cells.u_%s.get i))' % (name, t, S, name),
-             '(cubeData_of_check Cells.ok_scu_%s).2' % name)]
+            ('scu_file_%s' % name, 'CubeData %d %d (%d / 10 ^ 12) Cells.u_%s' % (N, S, t, name),
+             'cubeData_of_check Cells.ok_scu_%s' % name)]
     return name, lean, thms, t, N * N * 3
 
 
@@ -183,7 +186,7 @@ def floor_scaled_q(s):
     return int((Decimal(s) * Q).to_integral_value(rounding='ROUND_FLOOR'))
 
 
-def write_cell(outdir, row):
+def write_cell(outdir, row, write=True):
     sha = pinned_sha(row)
     name, lean, thms, t, cost = HANDLER[row['table']](row, os.path.join(ROOT, row['file']))
     module = '%s_%s' % (PREFIX[row['table']], name)
@@ -196,8 +199,9 @@ def write_cell(outdir, row):
             'set_option maxRecDepth 100000 in\n'
             'noncomputable %s\n'
             'end Packing.Cert.Cells\n' % (row['file'], lean))
-    with open(os.path.join(outdir, module + '.lean'), 'w') as f:
-        f.write(text)
+    if write:
+        with open(os.path.join(outdir, module + '.lean'), 'w') as f:
+            f.write(text)
     return module, thms, t, check_row(row, t), sha, cost
 
 
@@ -223,12 +227,14 @@ def selected(rows, argv):
 
 
 def main(argv):
+    lists_only = argv == ['--lists']
+    argv = [] if lists_only else argv
     rows = list(csv.DictReader(open(os.path.join(ROOT, 'cells.csv'))))
     outdir = os.path.join(LEAN, 'Packing', 'Cert', 'Cells')
     os.makedirs(outdir, exist_ok=True)
     done = []
     for row in selected(rows, argv):
-        module, thms, t, listed, sha, cost = write_cell(outdir, row)
+        module, thms, t, listed, sha, cost = write_cell(outdir, row, write=not lists_only)
         done.append(('%s\t%s' % (row['table'], row['cell']), module, thms, t, listed, sha, cost))
     if argv:
         return 0

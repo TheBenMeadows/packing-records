@@ -129,16 +129,17 @@ theorem norm_inner_le_of_cohB (hu : OkVec m u.re) (hu' : OkVec m u.im) (hv : OkV
 
 end Pairs
 
-/-- The vectors of `c` are nonzero and their pairwise normalized Hermitian products have
-absolute value at most `t`. -/
-def CoherenceData (m : ℕ) (t : ℝ) (c : List CVec) : Prop :=
-  (∀ i : Fin c.length, toCVec m (c.get i) ≠ 0) ∧
+/-- `c` holds `N` vectors whose real and imaginary parts have `m` entries each; they are nonzero
+and their pairwise normalized Hermitian products have absolute value at most `t`. -/
+def CoherenceData (m N : ℕ) (t : ℝ) (c : List CVec) : Prop :=
+  c.length = N ∧ (∀ u ∈ c, u.re.e.length = m ∧ u.im.e.length = m) ∧
+    (∀ i : Fin c.length, toCVec m (c.get i) ≠ 0) ∧
     ∀ i j : Fin c.length, i ≠ j →
       ‖⟪toCVec m (c.get i), toCVec m (c.get j)⟫_ℂ‖
         ≤ t * (‖toCVec m (c.get i)‖ * ‖toCVec m (c.get j)‖)
 
 theorem coherenceData_of_check {m N t : ℕ} {c : List CVec} (h : checkCoh m N t c = true) :
-    c.length = N ∧ CoherenceData m ((t : ℝ) / 10 ^ 12) c := by
+    CoherenceData m N ((t : ℝ) / 10 ^ 12) c := by
   obtain ⟨hN, hok, hpair⟩ := checkCoh_iff.mp h
   have hok' : ∀ i : Fin c.length,
       OkVec m (c.get i).re ∧ OkVec m (c.get i).im ∧ 1 ≤ cnsq (c.get i) :=
@@ -148,7 +149,8 @@ theorem coherenceData_of_check {m N t : ℕ} {c : List CVec} (h : checkCoh m N t
         ≤ (t : ℝ) / 10 ^ 12 * (‖toCVec m (c.get i)‖ * ‖toCVec m (c.get j)‖) :=
     fun i j hij => norm_inner_le_of_cohB (hok' i).1 (hok' i).2.1 (hok' j).1 (hok' j).2.1
       (List.pairwise_iff_get.mp hpair i j hij)
-  refine ⟨hN, fun i hz => ?_, fun i j hij => ?_⟩
+  refine ⟨hN, fun u hu => ⟨(okCVec_iff.mp (hok u hu)).1.len, (okCVec_iff.mp (hok u hu)).2.1.len⟩,
+    fun i hz => ?_, fun i j hij => ?_⟩
   · have h1 := norm_sq_toCVec_eq (hok' i).1 (hok' i).2.1
     rw [hz, norm_zero] at h1
     have h2 : (1 : ℝ) ≤ cnsq (c.get i) := by exact_mod_cast (hok' i).2.2
@@ -160,9 +162,10 @@ theorem coherenceData_of_check {m N t : ℕ} {c : List CVec} (h : checkCoh m N t
     · rw [norm_inner_symm, mul_comm ‖toCVec m (c.get i)‖]
       exact key j i h1
 
-theorem hasCoherence_of_data {m : ℕ} {t : ℝ} {c : List CVec} (h : CoherenceData m t c) :
-    HasCoherence m c.length t := by
-  obtain ⟨h0, hle⟩ := h
+theorem hasCoherence_of_data {m N : ℕ} {t : ℝ} {c : List CVec} (h : CoherenceData m N t c) :
+    HasCoherence m N t := by
+  obtain ⟨hN, -, h0, hle⟩ := h
+  subst hN
   refine ⟨fun i => ((‖toCVec m (c.get i)‖⁻¹ : ℝ) : ℂ) • toCVec m (c.get i),
     fun i => ?_, fun i j hij => ?_⟩
   · rw [norm_smul, Complex.norm_real, norm_inv, norm_norm,
@@ -186,10 +189,8 @@ theorem hasCoherence_of_data {m : ℕ} {t : ℝ} {c : List CVec} (h : CoherenceD
 
 /-- **Soundness of `checkCoh`.** -/
 theorem hasCoherence_of_check {m N t : ℕ} {c : List CVec} (h : checkCoh m N t c = true) :
-    HasCoherence m N ((t : ℝ) / 10 ^ 12) := by
-  obtain ⟨hN, hd⟩ := coherenceData_of_check h
-  subst hN
-  exact hasCoherence_of_data hd
+    HasCoherence m N ((t : ℝ) / 10 ^ 12) :=
+  hasCoherence_of_data (coherenceData_of_check h)
 
 end Cert
 
