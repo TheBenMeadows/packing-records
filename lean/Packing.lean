@@ -15,6 +15,7 @@ import Packing.Cube6
 import Packing.Cert.Check
 import Packing.Cert.CheckPoints
 import Packing.Cert.CheckLink
+import Packing.Cert.CheckBlocks
 import Packing.Cert.Sound
 import Packing.Cert.SoundPoints
 import Packing.Cert.SoundCoh
@@ -22,3 +23,4 @@ import Packing.Cert.SoundLink
 import Packing.Cert.Test
 import Packing.Cert.TestPoints
 import Packing.Cert.TestLink
+import Packing.Cert.TestBlocks

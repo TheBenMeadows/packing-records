@@ -117,11 +117,13 @@ The `+ 1` in step 2 makes the bound strict. A pair of lines at squared chordal d
 - Packomania hsp4, hsp5 and hsp6, `checkBall`: every centre c satisfies `|c|^2 10^24 <= (10^12 - t)^2 S^2`, and every two centres satisfy `|c - c'|^2 10^24 >= 4 t^2 S^2`.
 - Packomania scu, `checkCube`: every coordinate x of a centre satisfies `2 10^12 |x| <= (10^12 - 2t) S`, and every two centres satisfy the same distance condition. The file uses the cube `[-1/2, 1/2]^3`. The theorem moves it to `[0, 1]^3`.
 
+The kernel's memory grows with the number of pairs it evaluates in one theorem: cell 25-971 of the spherical codes passed 48 GB. For the 89 spherical codes with N^2 d above 12.5 million, the generator cuts the points into 4 or 5 consecutive blocks and states one kernel-evaluated theorem for the count and the vectors, one for the pairs inside each block, and one for the pairs between every two blocks. `Packing/Cert/CheckBlocks.lean` joins these into the same statement `checkSph d N t c = true` that the other cells prove in one evaluation, so the theorems of `AllPoints.lean` are the same for all cells. Checked in blocks, cell 25-971 takes 14 minutes and 5 GB.
+
 For the spherical codes and the Game of Sloanes t is the smallest integer the checker accepts. For the Packomania tables it is the largest. The generator stops unless t agrees with the cell's `our_value` to within one unit of 10^-12 and beats the table value. `points_manifest.tsv` lists t and the table value for each cell.
 
 ### Tests
 
-`Packing/Cert/Test.lean`, `TestPoints.lean` and `TestLink.lean` hold 69 cases with known answers. Each checker is run at the last threshold it must accept and at the next one, which it must reject, and on data that break one condition at a time: the count, the length of a vector, a stored sum, a stored norm, a zero vector, orthogonality, the container, the separation, a coefficient.
+`Packing/Cert/Test.lean`, `TestPoints.lean`, `TestLink.lean` and `TestBlocks.lean` hold 103 cases with known answers. Each checker is run at the last threshold it must accept and at the next one, which it must reject, and on data that break one condition at a time: the count, the length of a vector, a stored sum, a stored norm, a zero vector, orthogonality, the container, the separation, a coefficient. For the block check the failing pair is placed at the end of either block, between two blocks that each pass, and between the first and the third of three blocks.
 
 ## Build
 
