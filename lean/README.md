@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2 and 5 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Theorems
 
@@ -17,6 +17,9 @@ Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this
 | `Packing/Cube.lean` | `isMaxMinDist_two`, `_three`, `_four`, `_eight`, `_nine` | The largest minimum distance among N points of the unit cube is sqrt(3), sqrt(2), sqrt(2), 1 and sqrt(3)/2 for N = 2, 3, 4, 8 and 9. |
 | `Packing/Cube5.lean` | `isMaxMinDist_five` | The largest minimum distance among 5 points of the unit cube is sqrt(5)/2. |
 | | `isMaxRadius_five` | The largest radius of 5 equal balls packed in the unit cube is (5 - 2 sqrt(5))/2. |
+| `Packing/Cube5Unique.lean` | `isUniqueMaxMinDist_five` | Every arrangement of 5 points of the unit cube with pairwise distances at least sqrt(5)/2 is the image of Schaer's arrangement, in some order, under a symmetry of the cube. |
+| | `isUniqueUpToIsometry_five` | Every such arrangement is congruent to Schaer's. |
+| `Packing/CubeUnique.lean` | `isUniqueMaxMinDist_two` | Two points of the unit cube at distance at least sqrt(3) are two opposite corners. |
 | `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
 | | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
 | `Packing/CubeBalls.lean` | `maxRadius_of_maxMinDist` | If d is that largest minimum distance for N points, the largest radius of N equal balls packed in the unit cube is d/(2(1+d)). |
@@ -57,6 +60,9 @@ A `_file_` theorem states the property for the data of the cell, which are the n
 - `SphericalData d N t c`, `CoherenceData d N t c`, `BallData d N S r c`, `CubeData N S r c`: the data c hold N vectors with d entries each (3 for the cube), and those vectors have the property after normalization (the two code tables), after division by the positive scale S (the two ball tables) and after the move to `[0, 1]^3` (the cube).
 - `IsMaxMinDist N d`: some N points of `[0,1]^3` are pairwise at distance at least d, and any N points of `[0,1]^3` include two at distance at most d.
 - `IsMaxRadius N r`: `HasBallPackingInCube N r` holds and no larger radius has that property.
+- `cubeSymm v σ`: the map of `[0,1]^3` to itself that permutes the coordinates by σ and then replaces x by 1 - x in the coordinates where v is true. These are the 48 symmetries of the cube.
+- `IsUniqueUpToCubeSymm N d q`: every family of N points of `[0,1]^3` with pairwise distances at least d is `cubeSymm v σ` applied to q, with the points in some order. `IsUniqueUpToIsometry N d q` is the same with any isometry of space. The first implies the second. Both hold for every q when no family is feasible.
+- `IsUniqueMaxMinDist N d q`: q lies in `[0,1]^3` with pairwise distances at least d, any N points of `[0,1]^3` include two at distance at most d, and `IsUniqueUpToCubeSymm N d q` holds. It implies `IsMaxMinDist N d`.
 
 The families in these definitions are indexed, so two members can coincide. They cannot coincide when t > 0 for subspaces, when t < 1 for unit vectors and lines, or when r > 0 for centres. Outside those ranges, and for N <= 1, the existence statements hold for trivial reasons. `IsMaxMinDist N d` is false for every d when N <= 1, and `IsMaxRadius 0 r` is false for every r. In the 2,817 cells N is at least 6, every Grassmannian bound is at least 0.07, every cosine and coherence bound is between 0.08 and 0.83, and every radius is at least 0.05.
 
@@ -67,7 +73,7 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. For N = 5 and N = 6 the value is proved and the uniqueness of the configuration is not.
+- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2 and N = 5 and not for the other N.
 
 ## Five points in a cube
 
@@ -77,6 +83,14 @@ The families in these definitions are indexed, so two members can coincide. They
 2. Two of the other four points have the same least coordinate, and two such points are within sqrt(5)/2 of each other.
 
 Both facts are polynomial inequalities on polytopes: 28 of degree 4 in four variables for the first, 5 of degree 3 in seven variables for the second. `gen/gen_n5.py` finds, for each one, nonnegative rational coefficients that write the difference of the two sides as a combination of products of the constraints. It checks that identity in exact arithmetic and writes the lemma to `Packing/Cube5Cert.lean` with the products as hints. Lean's `linarith` then proves the lemma from the hints and finds its own coefficients. The generated file is in the repository, so the build does not run the generator, which needs `numpy` and `scipy`.
+
+### Uniqueness
+
+`Packing/Cube5Unique.lean` runs the same argument with the distances at least sqrt(5)/2 and follows where each inequality is tight. If a = 0, one point is a corner, the opposite corner is forced, and the other three points are alternate vertices of the hexagon cut from the cube by the plane through its centre; the two choices are mirror images. If a > 0, the first fact can be tight only at a = 1/2, and the second forces a = 0.
+
+Schaer's text takes 0 < a <= 1/2 in one step, with strict inequality in the first fact. At a = 1/2 the points (0, 1/2, 1/2) and (1, 0, 1/2) satisfy its hypotheses at distance exactly sqrt(5)/2, so the formal proof treats a = 1/2 separately: the two points are then determined, and two of the remaining three points are too close to each other.
+
+`gen/gen_n5_unique.py` writes the 61 lemmas of `Packing/Cube5EqCert.lean` that locate the tight cases. Each comes from an identity of the same kind as before, with one more term subtracted from the gap: a multiple of the constraints that vanish at the extremal point, or of a(1 - 2a), or of a.
 
 ## Six points in a cube
 

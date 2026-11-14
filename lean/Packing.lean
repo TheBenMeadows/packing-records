@@ -8,6 +8,9 @@ import Packing.CubeBalls
 import Packing.CubeUnique
 import Packing.Cube5Cert
 import Packing.Cube5
+import Packing.Cube5EqCert
+import Packing.Cube5UniqueLemmas
+import Packing.Cube5Unique
 import Packing.Cube6Prism
 import Packing.Cube6Cases
 import Packing.Cube6Core

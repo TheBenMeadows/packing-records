@@ -27,6 +27,8 @@ import Packing
 #print axioms Packing.Cube.isUniqueMaxMinDist_two
 #print axioms Packing.Cube5.isMaxMinDist_five
 #print axioms Packing.Cube5.isMaxRadius_five
+#print axioms Packing.Cube5.isUniqueMaxMinDist_five
+#print axioms Packing.Cube5.isUniqueUpToIsometry_five
 #print axioms Packing.Cube6.isMaxMinDist_six
 #print axioms Packing.Cube6.isMaxRadius_six
 #print axioms Packing.card_le_two_mul_finrank_of_mem
