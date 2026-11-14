@@ -6,6 +6,7 @@ import Packing.Frame
 import Packing.Cube
 import Packing.CubeBalls
 import Packing.CubeUnique
+import Packing.CubeUniqueSmall
 import Packing.Cube5Cert
 import Packing.Cube5
 import Packing.Cube5EqCert
