@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2 and 5 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 5 and 6 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Theorems
 
@@ -22,6 +22,8 @@ Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this
 | `Packing/CubeUnique.lean` | `isUniqueMaxMinDist_two` | Two points of the unit cube at distance at least sqrt(3) are two opposite corners. |
 | `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
 | | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
+| `Packing/Cube6Unique.lean` | `isUniqueMaxMinDist_six` | Every arrangement of 6 points of the unit cube with pairwise distances at least 3 sqrt(2)/4 is the image of Schaer's octahedron, in some order, under a symmetry of the cube. |
+| | `isUniqueUpToIsometry_six` | Every such arrangement is congruent to Schaer's. |
 | `Packing/CubeBalls.lean` | `maxRadius_of_maxMinDist` | If d is that largest minimum distance for N points, the largest radius of N equal balls packed in the unit cube is d/(2(1+d)). |
 | `Packing/Cert/Sound.lean` | `hasPacking_of_check` | If `check m n N k c` evaluates to `true`, there are N subspaces of dimension n in R^m that are pairwise at squared chordal distance at least k/10^10. |
 | `Packing/Cert/SoundLink.lean` | `spansPack_of_link` | If `checkLink m n R c K` also evaluates to `true`, those subspaces are the spans of the vectors in R, the vectors of the data file. |
@@ -73,7 +75,7 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2 and N = 5 and not for the other N.
+- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 5 and 6 and not for the other N.
 
 ## Five points in a cube
 
@@ -105,6 +107,12 @@ Schaer's text takes 0 < a <= 1/2 in one step, with strict inequality in the firs
 Step 3 is the one inequality here that is not a bound on a diameter. For three points in three given quadrants of the square, `gen/n6_prism_search.py` finds by linear programming three nonnegative polynomials of degree 2, one per pair of points, and a nonnegative combination of products of the constraints, such that the sum of the polynomials times `9/8 - d^2` equals that combination. `gen/gen_n6_prism.py` solves for exact rational coefficients on the support the search found, checks the identity in exact arithmetic and writes `Packing/Cube6Prism.lean`. Two of the three polynomials contain the squares of `y` and of `1/2 - y` for the same coordinate y, so they do not vanish together, and the three strict inequalities give a contradiction. The other quadrant assignments follow by the reflections `x -> 1 - x` and `y -> 1 - y` (`Packing/Cube6Cases.lean`).
 
 `Packing/Cube6Cases.lean`, `Packing/Cube6Core.lean` and `Packing/Cube6.lean` are case analyses written by `gen/gen_n6_cases.py`, `gen/gen_n6_core.py` and `gen/gen_n6_glue.py`. All four generated files are in the repository. The four files take about half an hour to compile on one core.
+
+### Uniqueness
+
+`Packing/Cube6Unique.lean` runs the argument with distances at least 3 sqrt(2)/4. Steps 1, 2 and 4 hold as before, because the bounds they use have room to spare. Step 3 becomes: three of the points in a slab `[0,1] x [0,1] x [0,1/4]` do not all have third coordinate below 1/4 (`prism_three_ge`). Its certificate has one more term on the right, the product of the three numbers 1/4 - z (`gen/n6_prism_ge_search.py`, `gen/gen_n6_prism_ge.py`, `Packing/Cube6PrismGe.lean`). In step 5 the three points nearest the origin then lie in `[0, 3/4]^3` with every pair at squared distance exactly 9/8, which makes them (3/4, 0, 0), (0, 3/4, 0) and (0, 0, 3/4) (`six_normal_ge`). The same statement for the arrangement reflected in all three coordinates gives the other three points.
+
+The generators of the case analyses write the files for this argument when called with `--ge`: `Packing/Cube6CasesGe.lean`, `Packing/Cube6CoreGe.lean` and `Packing/Cube6Opposite.lean`. These three files and `Cube6PrismGe.lean` take about half an hour to compile on one core.
 
 ## Cell certificates
 

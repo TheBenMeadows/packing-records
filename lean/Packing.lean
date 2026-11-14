@@ -15,6 +15,11 @@ import Packing.Cube6Prism
 import Packing.Cube6Cases
 import Packing.Cube6Core
 import Packing.Cube6
+import Packing.Cube6PrismGe
+import Packing.Cube6CasesGe
+import Packing.Cube6CoreGe
+import Packing.Cube6Opposite
+import Packing.Cube6Unique
 import Packing.Cert.Check
 import Packing.Cert.CheckPoints
 import Packing.Cert.CheckLink
