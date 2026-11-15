@@ -218,7 +218,7 @@ The files that the cells import, the three lists and the three manifests are the
 
 **Replay.** `leanchecker` replayed 96 modules in the kernel on the first machine, each in its own process: the 37 modules of the library, the three lists, and 56 cell modules (`gate/replay_modules.txt`). The cells are seven per table, the smallest, the largest and five spaced evenly between them by cost, with both modules of each Grassmannian cell. All 96 ended with exit code 0 and no output (`gate/replay_results.tsv`). The root module `Packing`, which holds only imports, was also on the list: the checker ran out of memory on it, at 40 GB when run alone.
 
-**After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms.
+**After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms. From a clean clone at the version 1.5 commit (kernel `v15`, tree hash `c871590d`), the library builds, the audit prints the same 45 lines, and one cell of each of the seven tables passes with its theorems from the three lists.
 
 ## Notes on kernel speed
 
