@@ -14,7 +14,8 @@ Mutations (all on the first cohn-harmonic row of cells.csv):
   energy_above_bar  2021 energy (tables/ and the bound column) set to E + 1e-10,
                     so E no longer beats min(table, 2021) by the margin
   non_unit_vector   first coordinate row scaled by (1 + 1e-15); sha256 updated
-  universal_row     the row marked universal = yes in tables/cohn_harmonic.tsv
+  universal_row     the row marked universal = yes in its harmonic snapshot
+                    (tables/cohn_harmonic.tsv, or the one dated by table_read)
   duplicate_cell    the cells.csv row appended a second time
   floor_too_low     recorded floor set to the recorded energy
 """
@@ -45,8 +46,9 @@ def target(rows):
     raise SystemExit('no cohn-harmonic row in cells.csv')
 
 
-def edit_tsv(root, N, n, col, value):
-    p = os.path.join(root, 'tables', 'cohn_harmonic.tsv')
+def edit_tsv(root, N, n, col, value, read=''):
+    """Set one column of row (N, n) in the harmonic snapshot dated `read` (blank = tables/cohn_harmonic.tsv)."""
+    p = os.path.join(root, 'tables', 'cohn_harmonic_%s.tsv' % read if read else 'cohn_harmonic.tsv')
     lines = open(p).read().split('\n')
     head = None
     for k, l in enumerate(lines):
@@ -76,7 +78,7 @@ def m_energy_above_bar(root):
     N, n = rows[i]['cell'].split('-')
     v = str(Decimal(rows[i]['our_value']) + Decimal('1e-10'))
     rows[i]['bound'] = v
-    edit_tsv(root, N, n, 'energy_2021', v)
+    edit_tsv(root, N, n, 'energy_2021', v, rows[i].get('table_read', ''))
     write_csv(root, cols, rows)
     return rows[i]['cell'], 'does not beat min(table, 2021)'
 
@@ -98,7 +100,7 @@ def m_universal(root):
     cols, rows = read_csv(root)
     i = target(rows)
     N, n = rows[i]['cell'].split('-')
-    edit_tsv(root, N, n, 'universal', 'yes')
+    edit_tsv(root, N, n, 'universal', 'yes', rows[i].get('table_read', ''))
     return rows[i]['cell'], 'universal optimum'
 
 

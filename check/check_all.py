@@ -29,7 +29,12 @@ the keep rules hold on exact rationals:
                    >= E + m; the file header names the cell and its energy.
                    Squared distances are exact rationals; the energy is a
                    60-digit decimal evaluation from them (see exact.py), so every
-                   harmonic comparison carries a 1e-40 safety margin
+                   harmonic comparison carries a 1e-40 safety margin. A row with
+                   a table_read date is checked against
+                   tables/cohn_harmonic_<date>.tsv; blank means the 2026-11-03 read
+Every row's status is accepted, pending or not listed (at the table's keeper).
+Rows are checked in parallel, one process per CPU; CHECK_WORKERS=<n> sets the
+number of processes (1 = no subprocesses).
 Table facts are read from tables/ and must equal the cells.csv columns. Each
 (table, cell) appears once, every file in the five output folders is listed,
 and the per-table counts match EXPECTED. The polish floor is a recorded number:
@@ -49,14 +54,15 @@ import exact  # noqa: E402
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
 HSAFE = Decimal('1e-40')
-EXPECTED = {'grassmannian': 1486, 'game-of-sloanes': 52, 'packomania-hsp4': 152, 'packomania-hsp5': 198,
-            'packomania-hsp6': 161, 'packomania-scu': 239, 'cohn-harmonic': 43, 'spherical-codes': 529, 'thomson': 1}
+EXPECTED = {'grassmannian': 1658, 'game-of-sloanes': 52, 'packomania-hsp4': 152, 'packomania-hsp5': 198,
+            'packomania-hsp6': 161, 'packomania-scu': 239, 'cohn-harmonic': 44, 'spherical-codes': 4369, 'thomson': 1}
 FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-hsp5', 'packomania-hsp6',
            'packomania-scu', 'cohn-harmonic',
            'spherical-codes', 'thomson')
 E11, E6 = Fraction(1, 10 ** 11), Fraction(1, 10 ** 6)
 BALL_DIM = {'hsp4': 4, 'hsp5': 5, 'hsp6': 6}
 PACKOMANIA = ('packomania-hsp4', 'packomania-hsp5', 'packomania-hsp6', 'packomania-scu')
+STATUSES = ('accepted', 'pending', 'not listed')
 
 
 def tsv(fn):
@@ -91,12 +97,14 @@ def sloanes():
     return {(int(r['d']), int(r['n'])): r for r in tsv('game_of_sloanes.tsv')}
 
 
-def harmonic_table():
-    # a tree without the harmonic table can still check the other four tables;
+def harmonic_table(read=''):
+    """The harmonic table as read on `read` (a cells.csv table_read date; blank = the 2026-11-03 snapshot)."""
+    fn = 'cohn_harmonic_%s.tsv' % read if read else 'cohn_harmonic.tsv'
+    # a tree without the harmonic table can still check the other tables;
     # any cohn-harmonic row then fails with a KeyError
-    if not os.path.exists(os.path.join(DATA, 'cohn_harmonic.tsv')):
+    if not os.path.exists(os.path.join(DATA, fn)):
         return {}
-    return {(int(r['N']), int(r['n'])): r for r in tsv('cohn_harmonic.tsv')}
+    return {(int(r['N']), int(r['n'])): r for r in tsv(fn)}
 
 
 def radius_table(fn):
@@ -265,56 +273,76 @@ def check_harmonic(r, full, H):
     return msg, E
 
 
+_SNAP = {}  # (table, table_read) -> table snapshot, loaded on first use in each process
+
+
+def table_for(tab, read):
+    if (tab, read) not in _SNAP:
+        _SNAP[(tab, read)] = {'grassmannian': cohn, 'spherical-codes': spherical_table, 'thomson': thomson_table,
+                              'cohn-harmonic': harmonic_table, 'game-of-sloanes': lambda _: sloanes()}[tab](read)
+    return _SNAP[(tab, read)]
+
+
+def tables(tab, read):
+    """(radii, suffix maxima) of a Packomania table snapshot."""
+    if ('packomania', tab, read) not in _SNAP:
+        radii = radius_table('packomania_%s_radius%s.txt' % (tab.split('-', 1)[1], '_' + read if read else ''))
+        _SNAP[('packomania', tab, read)] = (radii, suffix_max(radii))
+    return _SNAP[('packomania', tab, read)]
+
+
+def check_row(r):
+    """All per-file checks for one cells.csv row; returns the list of failure messages."""
+    tab, msg = r['table'], []
+    full = os.path.join(FINAL, r['file'])
+    if r.get('status') not in STATUSES:
+        msg.append('status %r is not one of %s' % (r.get('status'), ', '.join(STATUSES)))
+    try:
+        with open(full, 'rb') as fh:
+            if hashlib.sha256(fh.read()).hexdigest() != r['file_sha256']:
+                msg.append('sha256 mismatch')
+        read = r.get('table_read', '')
+        if tab == 'grassmannian':
+            m2, vd = check_grassmannian(r, full, table_for(tab, read))
+        elif tab == 'spherical-codes':
+            m2, vd = check_spherical(r, full, table_for(tab, read))
+        elif tab == 'thomson':
+            m2, vd = check_thomson(r, full, table_for(tab, read))
+        elif tab == 'game-of-sloanes':
+            m2, vd = check_sloanes(r, full, table_for(tab, ''))
+        elif tab in PACKOMANIA:
+            m2, vd = check_packomania(r, full, tab, tables)
+        elif tab == 'cohn-harmonic':
+            m2, vd = check_harmonic(r, full, table_for(tab, read))
+        else:
+            raise ValueError('unknown table %r' % tab)
+        msg += m2
+        if abs(vd - Decimal(r['our_value'])) > TOL:
+            msg.append('recorded value %s, recomputed %s' % (r['our_value'], vd))
+    except Exception as e:  # malformed file or table row
+        msg.append('error: %r' % (e,))
+    return msg
+
+
 def main():
-    T, H = sloanes(), harmonic_table()
-    snap = {}  # (table, table_read) -> snapshot, loaded on first use
-
-    def table_for(tab, read):
-        if (tab, read) not in snap:
-            snap[(tab, read)] = {'grassmannian': cohn, 'spherical-codes': spherical_table,
-                                 'thomson': thomson_table}[tab](read)
-        return snap[(tab, read)]
-    psnap = {}  # (table, table_read) -> (radii, suffix maxima) of a Packomania table snapshot
-
-    def tables(tab, read):
-        if (tab, read) not in psnap:
-            radii = radius_table('packomania_%s_radius%s.txt' % (tab.split('-', 1)[1], '_' + read if read else ''))
-            psnap[(tab, read)] = (radii, suffix_max(radii))
-        return psnap[(tab, read)]
     with open(os.path.join(FINAL, 'cells.csv')) as fh:
         rows = list(csv.DictReader(fh))
+    workers = int(os.environ.get('CHECK_WORKERS') or os.cpu_count() or 1)
+    if workers > 1:
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(workers) as ex:
+            results = list(ex.map(check_row, rows, chunksize=8))
+    else:
+        results = [check_row(r) for r in rows]
     fails, listed, seen, count = [], set(), set(), {}
-    for r in rows:
+    for r, m2 in zip(rows, results):
         tab, cell, path = r['table'], r['cell'], r['file']
         msg = []
         if (tab, cell) in seen or path in listed:
             msg.append('duplicate row')
         seen.add((tab, cell))
         listed.add(path)
-        full = os.path.join(FINAL, path)
-        try:
-            with open(full, 'rb') as fh:
-                if hashlib.sha256(fh.read()).hexdigest() != r['file_sha256']:
-                    msg.append('sha256 mismatch')
-            if tab == 'grassmannian':
-                m2, vd = check_grassmannian(r, full, table_for(tab, r.get('table_read', '')))
-            elif tab == 'spherical-codes':
-                m2, vd = check_spherical(r, full, table_for(tab, r['table_read']))
-            elif tab == 'thomson':
-                m2, vd = check_thomson(r, full, table_for(tab, r['table_read']))
-            elif tab == 'game-of-sloanes':
-                m2, vd = check_sloanes(r, full, T)
-            elif tab in PACKOMANIA:
-                m2, vd = check_packomania(r, full, tab, tables)
-            elif tab == 'cohn-harmonic':
-                m2, vd = check_harmonic(r, full, H)
-            else:
-                raise ValueError('unknown table %r' % tab)
-            msg += m2
-            if abs(vd - Decimal(r['our_value'])) > TOL:
-                msg.append('recorded value %s, recomputed %s' % (r['our_value'], vd))
-        except Exception as e:  # malformed file or table row
-            msg.append('error: %r' % (e,))
+        msg += m2
         count[tab] = count.get(tab, 0) + 1
         if msg:
             fails.append((tab, cell, msg))
