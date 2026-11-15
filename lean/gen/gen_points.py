@@ -269,9 +269,21 @@ def write_all(done):
         f.write('\n'.join(lines))
 
 
+def scope():
+    """The cells named in cells_scope.txt (lines `table:cell`), or None when there is no such file.
+
+    While the file exists, a run without arguments covers these cells only."""
+    path = os.path.join(LEAN, 'cells_scope.txt')
+    if not os.path.exists(path):
+        return None
+    return {l.strip() for l in open(path) if l.strip() and not l.startswith('#')}
+
+
 def selected(rows, argv):
     if not argv:
-        return [r for r in rows if r['table'] in HANDLER]
+        sc = scope()
+        return [r for r in rows if r['table'] in HANDLER
+                and (sc is None or '%s:%s' % (r['table'], r['cell']) in sc)]
     want = [a.split(':') for a in argv]
     return [r for r in rows
             if any(r['table'] == w[0] and (len(w) == 1 or r['cell'] == w[1]) for w in want)]

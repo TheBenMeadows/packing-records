@@ -1,6 +1,20 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 3, 4, 5, 6 and 8 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 917 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 3, 4, 5, 6 and 8 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+
+## Coverage of the tables
+
+The cell certificates were generated and checked for the files of version 1.4 of this repository: all 2,817 cells of its seven distance tables. Version 1.5 replaced 1,837 of those files, removed 63 cells and added 4,075. A certificate is tied to its data file through the sha256 in `cells.csv`, so the certificates in this tree are the ones for the 917 cells whose file is the same in both versions. `cells_scope.txt` lists them, and the generators, the three lists, the manifests and the result files cover these cells only.
+
+| Table | Cells in version 1.5 | With a certificate |
+|---|---|---|
+| Grassmannian | 1,658 | 86 |
+| Spherical codes | 4,369 | 29 |
+| Game of Sloanes | 52 | 52 |
+| Packomania hsp4, hsp5, hsp6 | 511 | 511 |
+| Packomania scu | 239 | 239 |
+
+The other 5,912 cells have no Lean certificate yet. To add cells, list them in `cells_scope.txt` and run the generators and the checks of "Build" again.
 
 ## Theorems
 
@@ -38,9 +52,9 @@ The generated files hold two instances of these theorems per cell.
 
 | Generated file | Cells | Theorems per cell |
 |---|---|---|
-| `Packing/Cert/All.lean` | 1,486 Grassmannian | `packing_<m>_<n>_<N> : HasPacking m n N (k / 10^10)` |
-| `Packing/Cert/AllLinks.lean` | 1,486 Grassmannian | `packing_file_<m>_<n>_<N> : SpansPack m n N (k / 10^10) <vectors of the file>` |
-| `Packing/Cert/AllPoints.lean` | 529 spherical codes | `sph_<d>_<N> : HasSphericalCode d N (t / 10^12)` and `sph_file_<d>_<N>` |
+| `Packing/Cert/All.lean` | 86 Grassmannian | `packing_<m>_<n>_<N> : HasPacking m n N (k / 10^10)` |
+| `Packing/Cert/AllLinks.lean` | 86 Grassmannian | `packing_file_<m>_<n>_<N> : SpansPack m n N (k / 10^10) <vectors of the file>` |
+| `Packing/Cert/AllPoints.lean` | 29 spherical codes | `sph_<d>_<N> : HasSphericalCode d N (t / 10^12)` and `sph_file_<d>_<N>` |
 | | 52 Game of Sloanes | `gos_<d>_<N> : HasCoherence d N (t / 10^12)` and `gos_file_<d>_<N>` |
 | | 511 Packomania hsp4, hsp5, hsp6 | `hsp4_<N> : HasBallPackingInBall 4 N (t / 10^12)` and `hsp4_file_<N>`; the same for hsp5 and hsp6 |
 | | 239 Packomania scu | `scu_<N> : HasBallPackingInCube N (t / 10^12)` and `scu_file_<N>` |
@@ -68,7 +82,7 @@ A `_file_` theorem states the property for the data of the cell, which are the n
 - `IsUniqueUpToCubeSymm N d q`: every family of N points of `[0,1]^3` with pairwise distances at least d is `cubeSymm v σ` applied to q, with the points in some order. `IsUniqueUpToIsometry N d q` is the same with any isometry of space. The first implies the second. Both hold for every q when no family is feasible.
 - `IsUniqueMaxMinDist N d q`: q lies in `[0,1]^3` with pairwise distances at least d, any N points of `[0,1]^3` include two at distance at most d, and `IsUniqueUpToCubeSymm N d q` holds. It implies `IsMaxMinDist N d`.
 
-The families in these definitions are indexed, so two members can coincide. They cannot coincide when t > 0 for subspaces, when t < 1 for unit vectors and lines, or when r > 0 for centres. Outside those ranges, and for N <= 1, the existence statements hold for trivial reasons. `IsMaxMinDist N d` is false for every d when N <= 1, and `IsMaxRadius 0 r` is false for every r. In the 2,817 cells N is at least 6, every Grassmannian bound is at least 0.07, every cosine and coherence bound is between 0.08 and 0.83, and every radius is at least 0.05.
+The families in these definitions are indexed, so two members can coincide. They cannot coincide when t > 0 for subspaces, when t < 1 for unit vectors and lines, or when r > 0 for centres. Outside those ranges, and for N <= 1, the existence statements hold for trivial reasons. `IsMaxMinDist N d` is false for every d when N <= 1, and `IsMaxRadius 0 r` is false for every r. In the 917 cells N is at least 6, every Grassmannian bound is at least 0.07, every cosine and coherence bound is between 0.13 and 0.81, and every radius is at least 0.05.
 
 ## Limits of what is proved
 
@@ -128,7 +142,7 @@ The generators of the case analyses write the files for this argument when calle
 
 Steps 2 and 4 check everything the proofs need, so an error in a generator cannot produce a false theorem. It can make a check fail.
 
-The bound of a cell is k/10^10, where k is the largest integer the checker accepts. The generator stops if k differs from the cell's `our_value` rounded down to 10 decimals, or if k does not exceed the table value. For all 1,486 cells k equals `our_value` rounded down to 10 decimals. `cells_manifest.tsv` lists k and the table value for each cell.
+The bound of a cell is k/10^10, where k is the largest integer the checker accepts. The generator stops if k differs from the cell's `our_value` rounded down to 10 decimals, or if k does not exceed the table value. For all 86 cells k equals `our_value` rounded down to 10 decimals. `cells_manifest.tsv` lists k and the table value for each cell.
 
 The `+ 1` in step 2 makes the bound strict. A pair of lines at squared chordal distance exactly 1/2 is accepted at k = 4999999999 and rejected at k = 5000000000.
 
@@ -141,7 +155,7 @@ The `+ 1` in step 2 makes the bound strict. A pair of lines at squared chordal d
 - Packomania hsp4, hsp5 and hsp6, `checkBall`: every centre c satisfies `|c|^2 10^24 <= (10^12 - t)^2 S^2`, and every two centres satisfy `|c - c'|^2 10^24 >= 4 t^2 S^2`.
 - Packomania scu, `checkCube`: every coordinate x of a centre satisfies `2 10^12 |x| <= (10^12 - 2t) S`, and every two centres satisfy the same distance condition. The file uses the cube `[-1/2, 1/2]^3`. The theorem moves it to `[0, 1]^3`.
 
-The kernel's memory grows with the number of pairs it evaluates in one theorem: cell 25-971 of the spherical codes passed 48 GB. For the 89 spherical codes with N^2 d above 12.5 million, the generator cuts the points into 4 or 5 consecutive blocks and states one kernel-evaluated theorem for the count and the vectors, one for the pairs inside each block, and one for the pairs between every two blocks. `Packing/Cert/CheckBlocks.lean` joins these into the same statement `checkSph d N t c = true` that the other cells prove in one evaluation, so the theorems of `AllPoints.lean` are the same for all cells. Checked in blocks, cell 25-971 takes 14 minutes and 5 GB.
+The kernel's memory grows with the number of pairs it evaluates in one theorem: cell 25-971 of the version 1.4 spherical codes passed 48 GB. For spherical codes with N^2 d above 12.5 million (89 of the version 1.4 cells, 5 of the 29 here), the generator cuts the points into 4 or 5 consecutive blocks and states one kernel-evaluated theorem for the count and the vectors, one for the pairs inside each block, and one for the pairs between every two blocks. `Packing/Cert/CheckBlocks.lean` joins these into the same statement `checkSph d N t c = true` that the other cells prove in one evaluation, so the theorems of `AllPoints.lean` are the same for all cells. Checked in blocks, that cell took 14 minutes and 5 GB.
 
 For the spherical codes and the Game of Sloanes t is the smallest integer the checker accepts. For the Packomania tables it is the largest. The generator stops unless t agrees with the cell's `our_value` to within one unit of 10^-12 and beats the table value. `points_manifest.tsv` lists t and the table value for each cell.
 
@@ -171,11 +185,11 @@ python3 gen/gen_points.py
 lake build PackingCells
 ```
 
-The generators write 4,303 files under `Packing/Cert/Cells/` (660 MB, ignored by git), the three generated lists and three manifests. `lake build PackingCells` starts one Lean process per core. To check one cell, run `python3 gen/gen_cert.py 6-2-15` and then `lake build Packing.Cert.Cells.C_6_2_15`.
+The generators write 1,003 files under `Packing/Cert/Cells/` (56 MB, ignored by git), the three generated lists and three manifests. `lake build PackingCells` starts one Lean process per core. To check one cell, run `python3 gen/gen_cert.py 6-2-15` and then `lake build Packing.Cert.Cells.C_6_2_15`.
 
 ## Run record
 
-The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Mathlib v4.35.0. A tree hash is the sha256 that `gate/gate.py` computes over the paths and contents of `lean/`.
+The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Mathlib v4.35.0, on the version 1.4 data. They cover all 2,817 cells of that version, of which the 917 of this tree are a part; the result files here keep the lines of those 917. A tree hash is the sha256 that `gate/gate.py` computes over the paths and contents of `lean/`.
 
 **One machine** (Xeon E5-1650 v2, 12 threads, 64 GB).
 
@@ -187,9 +201,9 @@ The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Math
 | `All.lean`, `AllLinks.lean`, `AllPoints.lean` | compile, no output | |
 | `lake build` and `Audit.lean` | 45 lines, each ending with the three standard axioms | |
 
-That is every one of the 2,817 cells. Unsplit, the 13 largest spherical codes did not finish on this machine, and one of them passed 48 GB. They pass in blocks.
+That is every one of the 2,817 cells of version 1.4. Unsplit, the 13 largest spherical codes did not finish on this machine, and one of them passed 48 GB. They pass in blocks.
 
-**From a clean clone** (Kaggle CPU kernels, 4 cores, about 30 GB). `gate/gate.py` clones this repository at the commit of version 1.4, lays `lean/` over it, installs the toolchain, builds the library, runs the audit, writes the cell files of its share from the data files, checks them, and compiles the theorems of `All.lean`, `AllLinks.lean` and `AllPoints.lean` for its share. `gate/summaries/` holds the summary of each kernel.
+**From a clean clone** (Kaggle CPU kernels, 4 cores, about 30 GB). `gate/gate.py` clones this repository at a pinned commit (version 1.4 for these runs), lays `lean/` over it, installs the toolchain, builds the library, runs the audit, writes the cell files of its share from the data files, checks them, and compiles the theorems of `All.lean`, `AllLinks.lean` and `AllPoints.lean` for its share. `gate/summaries/` holds the summary of each kernel.
 
 | Kernels | Tree hash | Modules | Passed |
 |---|---|---|---|
@@ -203,6 +217,8 @@ The 384 modules that did not pass in the first row were stopped by the memory li
 The files that the cells import, the three lists and the three manifests are the same in the three trees. `gen/gen_points.py` differs between the first tree and the others. Run again on the first machine, the later version wrote all 1,331 point files byte for byte as they were checked, and left `AllPoints.lean` and the manifest unchanged.
 
 **Replay.** `leanchecker` replayed 96 modules in the kernel on the first machine, each in its own process: the 37 modules of the library, the three lists, and 56 cell modules (`gate/replay_modules.txt`). The cells are seven per table, the smallest, the largest and five spaced evenly between them by cost, with both modules of each Grassmannian cell. All 96 ended with exit code 0 and no output (`gate/replay_results.tsv`). The root module `Packing`, which holds only imports, was also on the list: the checker ran out of memory on it, at 40 GB when run alone.
+
+**After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms.
 
 ## Notes on kernel speed
 

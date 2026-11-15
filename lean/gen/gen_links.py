@@ -124,11 +124,24 @@ def write_all(done):
         f.write('\n'.join(lines))
 
 
+def scope():
+    """The cells named in cells_scope.txt (lines `table:cell`), or None when there is no such file.
+
+    While the file exists, a run without arguments covers these cells only."""
+    path = os.path.join(LEAN, 'cells_scope.txt')
+    if not os.path.exists(path):
+        return None
+    return {l.strip() for l in open(path) if l.strip() and not l.startswith('#')}
+
+
 def main(argv):
     lists_only = argv == ['--lists']
     argv = [] if lists_only else argv
     table = {r['cell']: r for r in csv.DictReader(open(os.path.join(ROOT, 'cells.csv')))
              if r['table'] == 'grassmannian'}
+    sc = scope()
+    if sc is not None:
+        table = {c: r for c, r in table.items() if 'grassmannian:' + c in sc}
     bounds = {r['cell']: int(r['k']) for r in csv.DictReader(
         open(os.path.join(LEAN, 'cells_manifest.tsv')), delimiter='\t')}
     outdir = os.path.join(LEAN, 'Packing', 'Cert', 'Cells')

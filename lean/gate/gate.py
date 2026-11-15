@@ -23,7 +23,7 @@ SLICE = 0
 NSLICES = 5
 LIMIT = 0
 CHECK_LISTS = False
-PIN = 'fc877b65265d665880f9345933d6e0bfa76d700a'
+PIN = 'b4a2dc5c0762306246ef0c3710776bc00135240a'
 PAR = 4
 ONLY = []  # module names such as 'S_25_971': check these cells instead of a slice
 
