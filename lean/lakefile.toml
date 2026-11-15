@@ -1,0 +1,16 @@
+name = "packing"
+version = "0.1.0"
+defaultTargets = ["Packing"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+# The bounds, the certificate checker and its soundness proof.
+[[lean_lib]]
+name = "Packing"
+
+# One theorem per record cell. Needs the files written by gen/gen_cert.py.
+[[lean_lib]]
+name = "PackingCells"

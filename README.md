@@ -58,6 +58,10 @@ The checker reads every file, recomputes its value with exact rational arithmeti
 
 `cells.csv` lists every cell with our value, the table value, the margin, the polish floor where one applies, the sha256 of the file, whether the search started from a posted configuration, the author of that configuration, (from version 1.3) the date of the table snapshot the cell was checked against, and (from version 1.5) the file's status with its keeper and the keeper's submission id.
 
+## Lean proofs
+
+`lean/` holds proofs checked by Lean 4 with Mathlib. They cover the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 917 of the 6,829 cells of the seven distance tables (a configuration with that value exists; for Grassmannian cells, it is the span of the vectors in the file; `lean/README.md` says which cells and why), and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube. The harmonic and Thomson tables have no Lean certificates. `lean/README.md` lists the theorems, the definitions behind them, what is not proved, and how to rebuild.
+
 ## File formats
 
 - `grassmannian/<m>-<n>-<N>.txt`: line 1 is a comment that starts with `#` and states the cell, our value and the table value. Each following line is one vector of m comma-separated reals. The first n vectors span the first subspace, the next n the second, and so on. The vectors in each subspace are orthonormal.

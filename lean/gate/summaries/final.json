@@ -1,0 +1,36 @@
+{
+ "slice": 0,
+ "nslices": 5,
+ "limit": 0,
+ "pin": "fc877b65265d665880f9345933d6e0bfa76d700a",
+ "only": 1,
+ "par": 4,
+ "lean_tree_sha256": "d28fb11de3afc8333de3e9962d40ede0c8c6fa07306041a057f5ef72acb91710",
+ "repo_head": "fc877b65265d665880f9345933d6e0bfa76d700a",
+ "lean_version": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+ "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz x4",
+ "build_rc": 0,
+ "audit_lines": 45,
+ "audit_bad": [],
+ "units": 1,
+ "modules_checked": 1,
+ "modules_ok": 1,
+ "failures": [],
+ "check_seconds": 1,
+ "derived": {
+  "All.lean": {
+   "theorems": 0,
+   "rc": null
+  },
+  "AllLinks.lean": {
+   "theorems": 0,
+   "rc": null
+  },
+  "AllPoints.lean": {
+   "theorems": 2,
+   "rc": 0,
+   "log_bytes": 0
+  }
+ },
+ "wall_seconds": 2109
+}
