@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 3, 4, 5 and 6 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for each of the 2,817 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 3, 4, 5, 6 and 8 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Theorems
 
@@ -21,6 +21,7 @@ Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this
 | | `isUniqueUpToIsometry_five` | Every such arrangement is congruent to Schaer's. |
 | `Packing/CubeUnique.lean` | `isUniqueMaxMinDist_two` | Two points of the unit cube at distance at least sqrt(3) are two opposite corners. |
 | `Packing/CubeUniqueSmall.lean` | `isUniqueMaxMinDist_three`, `isUniqueMaxMinDist_four` | Three or four points of the unit cube pairwise at distance at least sqrt(2) are corners of a regular tetrahedron inscribed in the cube. |
+| `Packing/Cube8Unique.lean` | `isUniqueMaxMinDist_eight` | Eight points of the unit cube pairwise at distance at least 1 are the eight corners. |
 | `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
 | | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
 | `Packing/Cube6Unique.lean` | `isUniqueMaxMinDist_six` | Every arrangement of 6 points of the unit cube with pairwise distances at least 3 sqrt(2)/4 is the image of Schaer's octahedron, in some order, under a symmetry of the cube. |
@@ -76,7 +77,7 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5 and 6 and not for N = 8 and 9.
+- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5, 6 and 8 and not for N = 9.
 
 ## Five points in a cube
 
