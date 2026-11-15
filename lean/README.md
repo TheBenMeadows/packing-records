@@ -175,7 +175,34 @@ The generators write 4,303 files under `Packing/Cert/Cells/` (660 MB, ignored by
 
 ## Run record
 
-RUN_RECORD
+The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Mathlib v4.35.0. A tree hash is the sha256 that `gate/gate.py` computes over the paths and contents of `lean/`.
+
+**One machine** (Xeon E5-1650 v2, 12 threads, 64 GB).
+
+| Step | Result | Process time |
+|---|---|---|
+| Grassmannian cells (`cells_results.tsv`) | 1,486 of 1,486 | 5.0 h |
+| Links to the data files (`links_results.tsv`) | 1,486 of 1,486 | 2.1 h |
+| Point tables (`points_results.tsv`) | 1,331 of 1,331 | 43.7 h |
+| `All.lean`, `AllLinks.lean`, `AllPoints.lean` | compile, no output | |
+| `lake build` and `Audit.lean` | 45 lines, each ending with the three standard axioms | |
+
+That is every one of the 2,817 cells. Unsplit, the 13 largest spherical codes did not finish on this machine, and one of them passed 48 GB. They pass in blocks.
+
+**From a clean clone** (Kaggle CPU kernels, 4 cores, about 30 GB). `gate/gate.py` clones this repository at the commit of version 1.4, lays `lean/` over it, installs the toolchain, builds the library, runs the audit, writes the cell files of its share from the data files, checks them, and compiles the theorems of `All.lean`, `AllLinks.lean` and `AllPoints.lean` for its share. `gate/summaries/` holds the summary of each kernel.
+
+| Kernels | Tree hash | Modules | Passed |
+|---|---|---|---|
+| `s0` to `s4`, a fifth of the cells each, 4 processes | `c4880c63` | 4,303 | 3,919 |
+| `r0a` to `r4b`, the 384 others one at a time | `c4880c63` | 384 | 295 |
+| `giants`, the 89 others, checked in blocks | `319479da` | 89 | 89 |
+| `final`, build and audit and one cell | `d28fb11d` | 1 | 1 |
+
+The 384 modules that did not pass in the first row were stopped by the memory limit with four processes running. The 89 that did not pass alone are the spherical codes that are now checked in blocks. So each of the 4,303 cell modules passed from a clean clone: 4,214 at the first tree and 89 at the second. Build and audit were clean in every kernel. The third tree is the second plus the proofs for eight points.
+
+The files that the cells import, the three lists and the three manifests are the same in the three trees. `gen/gen_points.py` differs between the first tree and the others. Run again on the first machine, the later version wrote all 1,331 point files byte for byte as they were checked, and left `AllPoints.lean` and the manifest unchanged.
+
+**Replay.** `leanchecker` replayed 96 modules in the kernel on the first machine, each in its own process: the 37 modules of the library, the three lists, and 56 cell modules (`gate/replay_modules.txt`). The cells are seven per table, the smallest, the largest and five spaced evenly between them by cost, with both modules of each Grassmannian cell. All 96 ended with exit code 0 and no output (`gate/replay_results.tsv`). The root module `Packing`, which holds only imports, was also on the list: the checker ran out of memory on it, at 40 GB when run alone.
 
 ## Notes on kernel speed
 
