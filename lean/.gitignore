@@ -1,2 +1,3 @@
 .lake/
 Packing/Cert/Cells/
+__pycache__/

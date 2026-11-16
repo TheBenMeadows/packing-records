@@ -70,7 +70,7 @@ def setup():
         sh('tar -xzf %s -C %s' % (tars[0], REPO))
     else:  # Kaggle unpacked the archive: find the directory that holds the lakefile
         src = [d for d, _, fs in os.walk('/kaggle/input') if 'lakefile.toml' in fs][0]
-        sh('cp -r %s %s' % (src, LEAN))
+        sh('mkdir -p %s && cp -r %s/. %s/' % (LEAN, src, LEAN))
     sha = tree_sha(LEAN)
     sh('curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o '
        '%s/elan-init.sh && sh %s/elan-init.sh -y --no-modify-path --default-toolchain none '

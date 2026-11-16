@@ -28,6 +28,7 @@ import Packing
 #print axioms Packing.Cube.isUniqueMaxMinDist_three
 #print axioms Packing.Cube.isUniqueMaxMinDist_four
 #print axioms Packing.Cube8.isUniqueMaxMinDist_eight
+#print axioms Packing.Cube9.isUniqueMaxMinDist_nine
 #print axioms Packing.Cube5.isMaxMinDist_five
 #print axioms Packing.Cube5.isMaxRadius_five
 #print axioms Packing.Cube5.isUniqueMaxMinDist_five
