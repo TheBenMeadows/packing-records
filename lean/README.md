@@ -1,20 +1,20 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 917 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Coverage of the tables
 
-The cell certificates were generated and checked for the files of version 1.4 of this repository: all 2,817 cells of its seven distance tables. Version 1.5 replaced 1,837 of those files, removed 63 cells and added 4,075. A certificate is tied to its data file through the sha256 in `cells.csv`, so the certificates in this tree are the ones for the 917 cells whose file is the same in both versions. `cells_scope.txt` lists them, and the generators, the three lists, the manifests and the result files cover these cells only.
+The cell certificates were generated and checked for the files of version 1.4 of this repository: all 2,817 cells of its seven distance tables. Version 1.5 replaced 1,837 of those files, removed 63 cells and added 4,075. A certificate is tied to its data file through the sha256 in `cells.csv`, so only the certificates of the 917 cells whose file is the same in both versions carried over. The 1,572 other Grassmannian cells of version 1.5 were generated and checked again on 2026-11-15. `cells_scope.txt` lists the 2,489 cells with a certificate, and the generators, the three lists, the manifests and the result files cover these cells only.
 
 | Table | Cells in version 1.5 | With a certificate |
 |---|---|---|
-| Grassmannian | 1,658 | 86 |
+| Grassmannian | 1,658 | 1,658 |
 | Spherical codes | 4,369 | 29 |
 | Game of Sloanes | 52 | 52 |
 | Packomania hsp4, hsp5, hsp6 | 511 | 511 |
 | Packomania scu | 239 | 239 |
 
-The other 5,912 cells have no Lean certificate yet. To add cells, list them in `cells_scope.txt` and run the generators and the checks of "Build" again.
+The other 4,340 cells, all spherical codes, have no Lean certificate yet. To add cells, list them in `cells_scope.txt` and run the generators and the checks of "Build" again.
 
 ## Theorems
 
@@ -53,8 +53,8 @@ The generated files hold two instances of these theorems per cell.
 
 | Generated file | Cells | Theorems per cell |
 |---|---|---|
-| `Packing/Cert/All.lean` | 86 Grassmannian | `packing_<m>_<n>_<N> : HasPacking m n N (k / 10^10)` |
-| `Packing/Cert/AllLinks.lean` | 86 Grassmannian | `packing_file_<m>_<n>_<N> : SpansPack m n N (k / 10^10) <vectors of the file>` |
+| `Packing/Cert/All.lean` | 1,658 Grassmannian | `packing_<m>_<n>_<N> : HasPacking m n N (k / 10^10)` |
+| `Packing/Cert/AllLinks.lean` | 1,658 Grassmannian | `packing_file_<m>_<n>_<N> : SpansPack m n N (k / 10^10) <vectors of the file>` |
 | `Packing/Cert/AllPoints.lean` | 29 spherical codes | `sph_<d>_<N> : HasSphericalCode d N (t / 10^12)` and `sph_file_<d>_<N>` |
 | | 52 Game of Sloanes | `gos_<d>_<N> : HasCoherence d N (t / 10^12)` and `gos_file_<d>_<N>` |
 | | 511 Packomania hsp4, hsp5, hsp6 | `hsp4_<N> : HasBallPackingInBall 4 N (t / 10^12)` and `hsp4_file_<N>`; the same for hsp5 and hsp6 |
@@ -143,7 +143,7 @@ The generators of the case analyses write the files for this argument when calle
 
 Steps 2 and 4 check everything the proofs need, so an error in a generator cannot produce a false theorem. It can make a check fail.
 
-The bound of a cell is k/10^10, where k is the largest integer the checker accepts. The generator stops if k differs from the cell's `our_value` rounded down to 10 decimals, or if k does not exceed the table value. For all 86 cells k equals `our_value` rounded down to 10 decimals. `cells_manifest.tsv` lists k and the table value for each cell.
+The bound of a cell is k/10^10, where k is the largest integer the checker accepts. The generator stops if k differs from the cell's `our_value` rounded down to 10 decimals, or if k does not exceed the table value. For all 1,658 cells k equals `our_value` rounded down to 10 decimals. `cells_manifest.tsv` lists k and the table value for each cell.
 
 The `+ 1` in step 2 makes the bound strict. A pair of lines at squared chordal distance exactly 1/2 is accepted at k = 4999999999 and rejected at k = 5000000000.
 
@@ -186,7 +186,7 @@ python3 gen/gen_points.py
 lake build PackingCells
 ```
 
-The generators write 1,003 files under `Packing/Cert/Cells/` (56 MB, ignored by git), the three generated lists and three manifests. `lake build PackingCells` starts one Lean process per core. To check one cell, run `python3 gen/gen_cert.py 6-2-15` and then `lake build Packing.Cert.Cells.C_6_2_15`.
+The generators write 4,147 files under `Packing/Cert/Cells/` (ignored by git), the three generated lists and three manifests. `lake build PackingCells` starts one Lean process per core. To check one cell, run `python3 gen/gen_cert.py 6-2-15` and then `lake build Packing.Cert.Cells.C_6_2_15`.
 
 ## Run record
 
@@ -222,6 +222,8 @@ The files that the cells import, the three lists and the three manifests are the
 **After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms. From a clean clone at the version 1.5 commit (kernel `v15`, tree hash `c871590d`), the library builds, the audit prints the same 45 lines, and one cell of each of the seven tables passes with its theorems from the three lists.
 
 **Nine points, uniqueness** (2026-11-15). On the first machine `Packing/Cube9Unique.lean` builds and `isUniqueMaxMinDist_nine` depends on the three standard axioms; the full library was not rebuilt there. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `cube9`), `lake build` succeeds, `Audit.lean` prints 46 lines that each end with the three standard axioms, and one cell of each of the seven tables passes. An earlier run of that kernel copied the tree into a subdirectory and so built the tree of the merge commit; `gate/gate.py` now copies over an existing `lean/`.
+
+**Grassmannian cells of version 1.5** (2026-11-15, first machine, three Lean processes). The generators were run for all 6,829 cells of version 1.5. The 1,572 Grassmannian cells whose file is new or changed pass: 1,572 of 1,572 cell modules in 5.4 h of process time and 1,572 of 1,572 links to the data files in 2.4 h, the slowest module in 141 s. Their lines are appended to `cells_results.tsv` and `links_results.tsv`; the lines of the 86 earlier cells carry the module names of the version 1.4 run, without the `C_` prefix. `All.lean` and `AllLinks.lean`, now with 1,658 theorems each, compile with no output. The library is unchanged from the merge commit, so `lake build` and the audit were not run again. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `v15g`), the library builds, the audit prints 45 lines, and all 1,572 of these cells pass again with their links, together with one cell of each table: 3,152 of 3,152 modules, and the two lists for them compile with no output.
 
 ## Notes on kernel speed
 
