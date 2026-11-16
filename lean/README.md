@@ -221,6 +221,8 @@ The files that the cells import, the three lists and the three manifests are the
 
 **After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms. From a clean clone at the version 1.5 commit (kernel `v15`, tree hash `c871590d`), the library builds, the audit prints the same 45 lines, and one cell of each of the seven tables passes with its theorems from the three lists.
 
+**Nine points, uniqueness** (2026-11-15). On the first machine `Packing/Cube9Unique.lean` builds and `isUniqueMaxMinDist_nine` depends on the three standard axioms; the full library was not rebuilt there. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `cube9`), `lake build` succeeds, `Audit.lean` prints 46 lines that each end with the three standard axioms, and one cell of each of the seven tables passes. An earlier run of that kernel copied the tree into a subdirectory and so built the tree of the merge commit; `gate/gate.py` now copies over an existing `lean/`.
+
 ## Notes on kernel speed
 
 These measurements on cell 11-2-60 decided the shape of `Check.lean`.
