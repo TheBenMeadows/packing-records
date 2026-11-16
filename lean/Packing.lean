@@ -9,6 +9,7 @@ import Packing.CubeUnique
 import Packing.CubeUniqueSmall
 import Packing.Cube8Cert
 import Packing.Cube8Unique
+import Packing.Cube9Unique
 import Packing.Cube5Cert
 import Packing.Cube5
 import Packing.Cube5EqCert
