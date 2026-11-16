@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for 2, 3, 4, 5, 6 and 8 points. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
 
 ## Coverage of the tables
 
@@ -36,6 +36,7 @@ The other 4,340 cells, all spherical codes, have no Lean certificate yet. To add
 | `Packing/CubeUnique.lean` | `isUniqueMaxMinDist_two` | Two points of the unit cube at distance at least sqrt(3) are two opposite corners. |
 | `Packing/CubeUniqueSmall.lean` | `isUniqueMaxMinDist_three`, `isUniqueMaxMinDist_four` | Three or four points of the unit cube pairwise at distance at least sqrt(2) are corners of a regular tetrahedron inscribed in the cube. |
 | `Packing/Cube8Unique.lean` | `isUniqueMaxMinDist_eight` | Eight points of the unit cube pairwise at distance at least 1 are the eight corners. |
+| `Packing/Cube9Unique.lean` | `isUniqueMaxMinDist_nine` | Nine points of the unit cube pairwise at distance at least sqrt(3)/2 are the centre and the eight corners. |
 | `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
 | | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
 | `Packing/Cube6Unique.lean` | `isUniqueMaxMinDist_six` | Every arrangement of 6 points of the unit cube with pairwise distances at least 3 sqrt(2)/4 is the image of Schaer's octahedron, in some order, under a symmetry of the cube. |
@@ -91,7 +92,7 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5, 6 and 8 and not for N = 9.
+- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5, 6, 8 and 9.
 
 ## Five points in a cube
 
@@ -220,7 +221,9 @@ The files that the cells import, the three lists and the three manifests are the
 
 **After the merge with version 1.5** (2026-11-15, first machine). The generators were run on the version 1.5 data for the 917 cells of `cells_scope.txt`. All 1,003 files came out byte for byte as they were checked, so their results above stand. The three lists for the 917 cells compile with no output, `lake build` succeeds, and `Audit.lean` prints 45 lines that each end with the three standard axioms. From a clean clone at the version 1.5 commit (kernel `v15`, tree hash `c871590d`), the library builds, the audit prints the same 45 lines, and one cell of each of the seven tables passes with its theorems from the three lists.
 
-**Grassmannian cells of version 1.5** (2026-11-15, first machine, three Lean processes). The generators were run for all 6,829 cells of version 1.5. The 1,572 Grassmannian cells whose file is new or changed pass: 1,572 of 1,572 cell modules in 5.4 h of process time and 1,572 of 1,572 links to the data files in 2.4 h, the slowest module in 141 s. Their lines are appended to `cells_results.tsv` and `links_results.tsv`; the lines of the 86 earlier cells carry the module names of the version 1.4 run, without the `C_` prefix. `All.lean` and `AllLinks.lean`, now with 1,658 theorems each, compile with no output. The library is unchanged from the merge commit, so `lake build` and the audit were not run again. The checks of the 4,340 spherical codes are running. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `v15g`), the library builds, the audit prints 45 lines, and all 1,572 of these cells pass again with their links, together with one cell of each table: 3,152 of 3,152 modules, and the two lists for them compile with no output.
+**Nine points, uniqueness** (2026-11-15). On the first machine `Packing/Cube9Unique.lean` builds and `isUniqueMaxMinDist_nine` depends on the three standard axioms; the full library was not rebuilt there. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `cube9`), `lake build` succeeds, `Audit.lean` prints 46 lines that each end with the three standard axioms, and one cell of each of the seven tables passes. An earlier run of that kernel copied the tree into a subdirectory and so built the tree of the merge commit; `gate/gate.py` now copies over an existing `lean/`.
+
+**Grassmannian cells of version 1.5** (2026-11-15, first machine, three Lean processes). The generators were run for all 6,829 cells of version 1.5. The 1,572 Grassmannian cells whose file is new or changed pass: 1,572 of 1,572 cell modules in 5.4 h of process time and 1,572 of 1,572 links to the data files in 2.4 h, the slowest module in 141 s. Their lines are appended to `cells_results.tsv` and `links_results.tsv`; the lines of the 86 earlier cells carry the module names of the version 1.4 run, without the `C_` prefix. `All.lean` and `AllLinks.lean`, now with 1,658 theorems each, compile with no output. The library is unchanged from the merge commit, so `lake build` and the audit were not run again. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `v15g`), the library builds, the audit prints 45 lines, and all 1,572 of these cells pass again with their links, together with one cell of each table: 3,152 of 3,152 modules, and the two lists for them compile with no output.
 
 ## Notes on kernel speed
 

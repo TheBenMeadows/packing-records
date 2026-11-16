@@ -1,0 +1,38 @@
+{
+ "slice": 0,
+ "nslices": 5,
+ "limit": 0,
+ "pin": "abc1eedb4b23486f4129f9fd0b940cc0d60d38f6",
+ "only": 7,
+ "par": 4,
+ "lean_tree_sha256": "c85855294fd524aecb764768dca6701728d77c2406647b7e5d6348dff87d7ba6",
+ "repo_head": "abc1eedb4b23486f4129f9fd0b940cc0d60d38f6",
+ "lean_version": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+ "cpu": "AMD EPYC 7B12 x4",
+ "build_rc": 0,
+ "audit_lines": 46,
+ "audit_bad": [],
+ "units": 7,
+ "modules_checked": 8,
+ "modules_ok": 8,
+ "failures": [],
+ "check_seconds": 7,
+ "derived": {
+  "All.lean": {
+   "theorems": 1,
+   "rc": 0,
+   "log_bytes": 0
+  },
+  "AllLinks.lean": {
+   "theorems": 1,
+   "rc": 0,
+   "log_bytes": 0
+  },
+  "AllPoints.lean": {
+   "theorems": 12,
+   "rc": 0,
+   "log_bytes": 0
+  }
+ },
+ "wall_seconds": 1498
+}
