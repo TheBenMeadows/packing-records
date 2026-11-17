@@ -1,0 +1,68 @@
+{
+ "pin": "beb5b9f",
+ "steps": {
+  "lean_version": {
+   "rc": 0,
+   "tail": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)"
+  },
+  "gen_cert": {
+   "rc": 0,
+   "tail": ""
+  },
+  "gen_points": {
+   "rc": 0,
+   "tail": ""
+  },
+  "build_Challenge": {
+   "rc": 0,
+   "tail": "\u26a0 [9083/9087] Built Challenge.Cert.SoundLink (5.6s)\nwarning: Challenge/Cert/SoundLink.lean:12:8: declaration uses `sorry`\n\u26a0 [9084/9087] Built Challenge.Cert.SoundCoh (5.8s)\nwarning: Challenge/Cert/SoundCoh.lean:23:8: declaration uses `sorry`\nwarning: Challenge/Cert/SoundCoh.lean:27:8: declaration uses `sorry`\n\u26a0 [9085/9087] Built Challenge.Cert.Cells (5.3s)\nwarning: Challenge/Cert/Cells.lean:12:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:15:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:18:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:21:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:24:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:27:8: declaration uses `sorry`\nwarning: Challenge/Cert/Cells.lean:30:8: declaration uses `sorry`\n\u2714 [9086/9087] Built Challenge (5.3s)\nBuild completed successfully (9087 jobs)."
+  },
+  "build_Solution": {
+   "rc": 0,
+   "tail": "\u2714 [9080/9094] Built Packing.Cert.SoundCoh (11s)\n\u2714 [9081/9094] Built Packing.Cube5UniqueLemmas (71s)\n\u2714 [9082/9094] Built Packing.Cube5Unique (32s)\n\u2714 [9083/9094] Built Packing.Cube8Unique (171s)\n\u2714 [9084/9094] Built Packing.Cube9Unique (14s)\n\u2714 [9085/9094] Built Packing.Cube6Cases (502s)\n\u2714 [9086/9094] Built Packing.Cube6Core (320s)\n\u2714 [9087/9094] Built Packing.Cube6CasesGe (517s)\n\u2714 [9088/9094] Built Packing.Cube6 (289s)\n\u2714 [9089/9094] Built Packing.Cube6CoreGe (331s)\n\u2714 [9090/9094] Built Packing.Cube6Opposite (216s)\n\u2714 [9091/9094] Built Packing.Cube6Unique (14s)\n\u2714 [9092/9094] Built Packing (6.0s)\n\u2714 [9093/9094] Built Solution (6.1s)\nBuild completed successfully (9094 jobs)."
+  },
+  "disk": {
+   "rc": 0,
+   "tail": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/loop2       20G   13G  7.1G  65% /kaggle/working\n7.7G\t/kaggle/working/repo/lean/.lake"
+  },
+  "DiagC": {
+   "rc": 0,
+   "tail": ""
+  },
+  "DiagS": {
+   "rc": 0,
+   "tail": ""
+  }
+ },
+ "repo_head": "beb5b9fce44833991b0efbde10b5fcd1987aab02",
+ "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz x4",
+ "bwrap": "/usr/bin/bwrap",
+ "diag_compared": 195,
+ "diag_differ": [],
+ "default": {
+  "rc": 1,
+  "seconds": 0,
+  "tail": "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\nerror: Child exited with 1\nResolving dependencies",
+  "rc_nosandbox": 0,
+  "seconds_nosandbox": 287,
+  "tail_nosandbox": "warning: Packing/Cube6Prism.lean: imports `Mathlib` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file\n\u26a0 [9083/9094] Replayed Packing.Cube6PrismGe\nwarning: Packing/Cube6PrismGe.lean: imports `Mathlib` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file\nBuild completed successfully (9094 jobs).\nExporting #[Quot, Quot.mk, Quot.lift, Quot.ind, Packing.rankin_simplex, Packing.rankin_orthoplex, Packing.rankin_simplex_unit, Packing.rankin_orthoplex_unit, Packing.chordalSq_eq, Packing.chs_simplex, Packing.chs_orthoplex, Packing.isProjector_projMatrix, Packing.chs_simplex_subspace, Packing.chs_orthoplex_subspace, Packing.subspaceChordalSq_span_frames, Packing.Cert.hasPacking_of_check, Packing.Cube.isMaxMinDist_two, Packing.Cube.isMaxMinDist_three, Packing.Cube.isMaxMinDist_four, Packing.Cube.isMaxMinDist_eight, Packing.Cube.isMaxMinDist_nine, Packing.Cube.maxRadius_of_maxMinDist, Packing.Cube.isMaxRadius_eight, Packing.Cube.isUniqueMaxMinDist_two, Packing.Cube.isUniqueMaxMinDist_three, Packing.Cube.isUniqueMaxMinDist_four, Packing.Cube8.isUniqueMaxMinDist_eight, Packing.Cube9.isUniqueMaxMinDist_nine, Packing.Cube5.isMaxMinDist_five, Packing.Cube5.isMaxRadius_five, Packing.Cube5.isUniqueMaxMinDist_five, Packing.Cube5.isUniqueUpToIsometry_five, Packing.Cube6.isMaxMinDist_six, Packing.Cube6.isMaxRadius_six, Packing.Cube6.isUniqueMaxMinDist_six, Packing.Cube6.isUniqueUpToIsometry_six, Packing.card_le_two_mul_finrank_of_mem, Packing.rankin_orthoplex_strict, Packing.chs_orthoplex_strict, Packing.chs_orthoplex_strict_subspace, Packing.Cert.spansPack_of_check, Packing.Cert.spansPack_of_link, Packing.Cert.hasSphericalCode_of_check, Packing.Cert.sphericalData_of_check, Packing.Cert.hasCoherence_of_check, Packing.Cert.coherenceData_of_check, Packing.Cert.hasBallPackingInBall_of_check, Packing.Cert.ballData_of_check, Packing.Cert.hasBallPackingInCube_of_check, Packing.Cert.cubeData_of_check, Packing.Cert.packing_3_1_43, Packing.Cert.gos_3_24, Packing.Cert.sph_6_138, Packing.Cert.hsp4_30, Packing.Cert.hsp5_39, Packing.Cert.hsp6_16, Packing.Cert.scu_135, propext, Classical.choice, Quot.sound, Nat.add, Nat.sub, Nat.mul, Nat.pow, Nat.gcd, Nat.div, Nat.mod, Nat.beq, Nat.ble, Nat.land, Nat.lor, Nat.xor, Nat.shiftLeft, Nat.shiftRight, String.ofList, Char.ofNat, List, eagerReduce, Nat, String, String.mk, Char, optParam, autoParam, semiOutParam, outParam] from Solution\nRunning Lean default kernel on solution\nLean default kernel accepts the solution\nYour solution is okay!"
+ },
+ "paranoid": {
+  "rc": 1,
+  "seconds": 0,
+  "tail": "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\nerror: Child exited with 1\nResolving dependencies",
+  "rc_nosandbox": 0,
+  "seconds_nosandbox": 702,
+  "tail_nosandbox": "con-leche: accepted 35817 declarations (--verified)\ncon-leche kernel accepts the solution\nRunning con-ron kernel on solution\ncon-ron: accepted 35817 declarations (--verified)\ncon-ron kernel accepts the solution\nRunning Lean default kernel on solution\nLean default kernel accepts the solution\nYour solution is okay!"
+ },
+ "mutation_applied": true,
+ "mutation": {
+  "rc": 1,
+  "seconds": 0,
+  "tail": "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\nerror: Child exited with 1\nResolving dependencies",
+  "rc_nosandbox": 1,
+  "seconds_nosandbox": 176,
+  "tail_nosandbox": "warning: Packing/Cube5EqCert.lean: imports `Mathlib` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file\n\u26a0 [9079/9094] Replayed Packing.Cube6Prism\nwarning: Packing/Cube6Prism.lean: imports `Mathlib` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file\n\u26a0 [9083/9094] Replayed Packing.Cube6PrismGe\nwarning: Packing/Cube6PrismGe.lean: imports `Mathlib` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file\nBuild completed successfully (9094 jobs).\nerror: Const does not match between challenge and target 'Packing.Cube.IsMaxMinDist'\nExporting #[Quot, Quot.mk, Quot.lift, Quot.ind, Packing.rankin_simplex, Packing.rankin_orthoplex, Packing.rankin_simplex_unit, Packing.rankin_orthoplex_unit, Packing.chordalSq_eq, Packing.chs_simplex, Packing.chs_orthoplex, Packing.isProjector_projMatrix, Packing.chs_simplex_subspace, Packing.chs_orthoplex_subspace, Packing.subspaceChordalSq_span_frames, Packing.Cert.hasPacking_of_check, Packing.Cube.isMaxMinDist_two, Packing.Cube.isMaxMinDist_three, Packing.Cube.isMaxMinDist_four, Packing.Cube.isMaxMinDist_eight, Packing.Cube.isMaxMinDist_nine, Packing.Cube.maxRadius_of_maxMinDist, Packing.Cube.isMaxRadius_eight, Packing.Cube.isUniqueMaxMinDist_two, Packing.Cube.isUniqueMaxMinDist_three, Packing.Cube.isUniqueMaxMinDist_four, Packing.Cube8.isUniqueMaxMinDist_eight, Packing.Cube9.isUniqueMaxMinDist_nine, Packing.Cube5.isMaxMinDist_five, Packing.Cube5.isMaxRadius_five, Packing.Cube5.isUniqueMaxMinDist_five, Packing.Cube5.isUniqueUpToIsometry_five, Packing.Cube6.isMaxMinDist_six, Packing.Cube6.isMaxRadius_six, Packing.Cube6.isUniqueMaxMinDist_six, Packing.Cube6.isUniqueUpToIsometry_six, Packing.card_le_two_mul_finrank_of_mem, Packing.rankin_orthoplex_strict, Packing.chs_orthoplex_strict, Packing.chs_orthoplex_strict_subspace, Packing.Cert.spansPack_of_check, Packing.Cert.spansPack_of_link, Packing.Cert.hasSphericalCode_of_check, Packing.Cert.sphericalData_of_check, Packing.Cert.hasCoherence_of_check, Packing.Cert.coherenceData_of_check, Packing.Cert.hasBallPackingInBall_of_check, Packing.Cert.ballData_of_check, Packing.Cert.hasBallPackingInCube_of_check, Packing.Cert.cubeData_of_check, Packing.Cert.packing_3_1_43, Packing.Cert.gos_3_24, Packing.Cert.sph_6_138, Packing.Cert.hsp4_30, Packing.Cert.hsp5_39, Packing.Cert.hsp6_16, Packing.Cert.scu_135, propext, Classical.choice, Quot.sound, Nat.add, Nat.sub, Nat.mul, Nat.pow, Nat.gcd, Nat.div, Nat.mod, Nat.beq, Nat.ble, Nat.land, Nat.lor, Nat.xor, Nat.shiftLeft, Nat.shiftRight, String.ofList, Char.ofNat, List, eagerReduce, Nat, String, String.mk, Char, optParam, autoParam, semiOutParam, outParam] from Solution"
+ },
+ "wall_seconds": 3991
+}
