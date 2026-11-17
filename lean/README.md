@@ -202,6 +202,8 @@ lake comparator --paranoid
 
 The sandbox needs `bwrap` on Linux. `gen/gen_challenge.py` writes `Challenge/` from the library and `gen/gen_challenge.py --check` fails if the files differ from a fresh run. `Challenge/Cert/Cells.lean` is written by hand. One definition is copied without being named by a statement: Lean gave `Packing.Cube5.T` an auxiliary proof that the value of `five` reuses, so `cd` and `T` precede `five` in `Challenge/Cube5.lean`.
 
+When to run it again: before a pull request that changes a file under `Packing/` other than the generated cell files, or that adds a theorem to `Audit.lean`, run `python3 -I gen/gen_challenge.py` (and commit what it writes), then `lake comparator --paranoid`, or `gate/comparator_run.py` on a Kaggle CPU kernel. A pull request that only adds or replaces cells does not need it, because the cell statements use the definitions the challenge already fixes.
+
 ## Run record
 
 The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Mathlib v4.35.0, on the version 1.4 data. They cover all 2,817 cells of that version, of which the 917 of this tree are a part; the result files here keep the lines of those 917. A tree hash is the sha256 that `gate/gate.py` computes over the paths and contents of `lean/`.
