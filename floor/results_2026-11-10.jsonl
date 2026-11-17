@@ -3060,9 +3060,9 @@
 {"file": "seeds_mj/hsp5-289.pck", "n": 289, "s0": 0.0001, "start_r": 0.2369109371709741, "polished_r": 0.2369109371709741, "lps": 30, "accepted": 0, "secs": 8.9}
 {"file": "floorin/hsp5-289.posted.txt", "n": 289, "s0": 0.01, "start_r": 0.2373454696700812, "polished_r": 0.23734552631739997, "lps": 226, "accepted": 189, "secs": 197.2}
 {"file": "seeds_mj/hsp5-240.pck", "n": 240, "s0": 0.0001, "start_r": 0.24366885956662346, "polished_r": 0.2436689182608133, "lps": 136, "accepted": 106, "secs": 67.4}
-{"file": "/Users/benmeadows/lanes/mj5/floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.01, "start_r": 0.224529211031834, "polished_r": 0.22452921103253698, "lps": 45, "accepted": 8, "secs": 4.0}
-{"file": "/Users/benmeadows/lanes/mj5/floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.001, "start_r": 0.224529211031834, "polished_r": 0.22452921103251489, "lps": 38, "accepted": 4, "secs": 2.8}
-{"file": "/Users/benmeadows/lanes/mj5/floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.0001, "start_r": 0.224529211031834, "polished_r": 0.224529211032498, "lps": 33, "accepted": 3, "secs": 2.0}
+{"file": "floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.01, "start_r": 0.224529211031834, "polished_r": 0.22452921103253698, "lps": 45, "accepted": 8, "secs": 4.0}
+{"file": "floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.001, "start_r": 0.224529211031834, "polished_r": 0.22452921103251489, "lps": 38, "accepted": 4, "secs": 2.8}
+{"file": "floorin/hsp4-140.posted.txt", "n": 140, "s0": 0.0001, "start_r": 0.224529211031834, "polished_r": 0.224529211032498, "lps": 33, "accepted": 3, "secs": 2.0}
 {"file": "seeds_mj/hsp4-140.pck", "n": 140, "s0": 0.01, "start_r": 0.2245292110325533, "polished_r": 0.2245292110325533, "lps": 37, "accepted": 0, "secs": 2.7}
 {"file": "seeds_mj/hsp4-140.pck", "n": 140, "s0": 0.001, "start_r": 0.2245292110325533, "polished_r": 0.2245292110325533, "lps": 34, "accepted": 0, "secs": 2.2}
 {"file": "seeds_mj/hsp4-140.pck", "n": 140, "s0": 0.0001, "start_r": 0.2245292110325533, "polished_r": 0.2245292110325533, "lps": 30, "accepted": 0, "secs": 1.7}
