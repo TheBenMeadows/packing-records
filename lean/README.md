@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file uses `sorry` or `native_decide`.
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file of the library uses `sorry` or `native_decide`. The statements in `Challenge/` end in `sorry` on purpose (see "Statements checked with `lake comparator`").
 
 ## Coverage of the tables
 
@@ -188,6 +188,20 @@ lake build PackingCells
 
 The generators write 4,147 files under `Packing/Cert/Cells/` (ignored by git), the three generated lists and three manifests. `lake build PackingCells` starts one Lean process per core. To check one cell, run `python3 gen/gen_cert.py 6-2-15` and then `lake build Packing.Cert.Cells.C_6_2_15`.
 
+## Statements checked with `lake comparator`
+
+`Audit.lean` shows which axioms the theorems use, but the theorems and the definitions they mention sit in the same library as the proofs. `Challenge.lean` and `Challenge/` separate them. They import only Mathlib, copy every definition that a statement mentions from `Packing/` (the structures, the checkers, the points such as `five` and `nine`), and state the 46 theorems of `Audit.lean` and one cell of each of the seven tables (`Challenge/Cert/Cells.lean`) with `sorry` in place of the proof. They are about 900 lines. To check what is proved, read these files next to the tables under "Theorems" and "Definitions behind the statements". The proofs do not need to be read.
+
+`lake comparator` (Lean 4.35) builds `Solution.lean`, which imports the library and the seven sampled cell files, exports it, and accepts only if every theorem named in `comparator.json` has the same statement as in the challenge, every constant of the challenge (definitions included) is identical in the library, the proofs use only `propext`, `Classical.choice` and `Quot.sound`, and Lean's kernel replays them. `--paranoid` also requires the external kernels shipped with Lean to accept.
+
+```
+python3 -I gen/gen_cert.py 3-1-43
+python3 -I gen/gen_points.py game-of-sloanes:3-24 spherical-codes:6-138 packomania-hsp4:30 packomania-hsp5:39 packomania-hsp6:16 packomania-scu:135
+lake comparator --paranoid
+```
+
+The sandbox needs `bwrap` on Linux. `gen/gen_challenge.py` writes `Challenge/` from the library and `gen/gen_challenge.py --check` fails if the files differ from a fresh run. `Challenge/Cert/Cells.lean` is written by hand. One definition is copied without being named by a statement: Lean gave `Packing.Cube5.T` an auxiliary proof that the value of `five` reuses, so `cd` and `T` precede `five` in `Challenge/Cube5.lean`.
+
 ## Run record
 
 The runs below were made from 2026-11-12 to 2026-11-14 with Lean 4.35.0 and Mathlib v4.35.0, on the version 1.4 data. They cover all 2,817 cells of that version, of which the 917 of this tree are a part; the result files here keep the lines of those 917. A tree hash is the sha256 that `gate/gate.py` computes over the paths and contents of `lean/`.
@@ -224,6 +238,8 @@ The files that the cells import, the three lists and the three manifests are the
 **Nine points, uniqueness** (2026-11-15). On the first machine `Packing/Cube9Unique.lean` builds and `isUniqueMaxMinDist_nine` depends on the three standard axioms; the full library was not rebuilt there. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `cube9`), `lake build` succeeds, `Audit.lean` prints 46 lines that each end with the three standard axioms, and one cell of each of the seven tables passes. An earlier run of that kernel copied the tree into a subdirectory and so built the tree of the merge commit; `gate/gate.py` now copies over an existing `lean/`.
 
 **Grassmannian cells of version 1.5** (2026-11-15, first machine, three Lean processes). The generators were run for all 6,829 cells of version 1.5. The 1,572 Grassmannian cells whose file is new or changed pass: 1,572 of 1,572 cell modules in 5.4 h of process time and 1,572 of 1,572 links to the data files in 2.4 h, the slowest module in 141 s. Their lines are appended to `cells_results.tsv` and `links_results.tsv`; the lines of the 86 earlier cells carry the module names of the version 1.4 run, without the `C_` prefix. `All.lean` and `AllLinks.lean`, now with 1,658 theorems each, compile with no output. The library is unchanged from the merge commit, so `lake build` and the audit were not run again. From a clean clone at the merge commit `abc1eed` with this tree laid over it (kernel `v15g`), the library builds, the audit prints 45 lines, and all 1,572 of these cells pass again with their links, together with one cell of each table: 3,152 of 3,152 modules, and the two lists for them compile with no output.
+
+**Comparator** (2026-11-16, Kaggle CPU kernel `packing-lean-comparator`, 4 cores, summary in `gate/summaries/comparator.json`). `gate/comparator_run.py` clones this repository at `beb5b9f`, lays this tree over it, writes the seven sampled cell files, builds `Challenge` and `Solution` and runs `lake comparator` on the 53 theorems of `comparator.json`. Kaggle containers do not allow the namespaces `bwrap` needs, so each run was repeated with `--inadvisably-no-sandbox` and the container was the only isolation. `lake comparator` accepted (Lean's kernel, 287 s). `lake comparator --paranoid` accepted: Lean's paranoid and default kernels, lean4lean, nanoda, con-leche and con-ron (con-leche and con-ron report 35,817 declarations, `--verified`), 702 s. As a control, the same run with `d ≤ dist` changed to `d < dist` in the challenge's `IsMaxMinDist` was rejected: `Const does not match between challenge and target 'Packing.Cube.IsMaxMinDist'`. A comparison of the 195 constants of the challenge with the library's (level parameters, reducibility hints, safety and hashes of type and value) found no difference.
 
 ## Notes on kernel speed
 

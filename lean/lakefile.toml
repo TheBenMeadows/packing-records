@@ -14,3 +14,12 @@ name = "Packing"
 # One theorem per record cell. Needs the files written by gen/gen_cert.py.
 [[lean_lib]]
 name = "PackingCells"
+
+# Trusted statements for `lake comparator`: Mathlib only, definitions copied from Packing,
+# every theorem closed with `sorry`. Read these files to check what is proved.
+[[lean_lib]]
+name = "Challenge"
+
+# The module `lake comparator` judges against Challenge (needs the seven sampled cell files).
+[[lean_lib]]
+name = "Solution"
