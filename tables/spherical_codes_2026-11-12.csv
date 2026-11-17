@@ -1,4 +1,4 @@
-# Facts extracted from https://spherical-codes.mit.edu/plain (the spherical-codes test server), read 2026-11-12T14:29:47Z, before our upload that day. proven_optimal and needs_more_optimization are carried from the 2026-11-07 read of https://spherical-codes.org/ (blank where that read had no row).
+# Facts extracted from https://spherical-codes.mit.edu/plain (the spherical-codes test server), read 2026-11-12T14:29:47Z, before our upload that day. proven_optimal and needs_more_optimization are carried from the 2026-11-07 read of https://spherical-codes.org/; where that read had no row, proven_optimal is written no and needs_more_optimization is blank, and no source was read for either.
 d,N,cos,proven_optimal,needs_more_optimization
 3,7,0.210138312731,yes,no
 3,8,0.261203874964,yes,no
