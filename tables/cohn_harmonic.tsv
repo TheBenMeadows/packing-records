@@ -1,6 +1,6 @@
 # Facts extracted from https://cohn.mit.edu/harmonic-energy (Henry Cohn), read 2026-11-03: N, n, table_energy (10 decimals; the minimum where a pair (N, n) is listed twice), distances.
 # energy_2021: 50-digit energy from data.txt of the 2021 data set, https://hdl.handle.net/1721.1/130937 (Ballinger, Blekherman, Cohn, Giansiracusa, Kelly, Schurmann), read 2026-11-03.
-# universal: yes if (N, n) is listed at https://cohn.mit.edu/harmonic-optima (read 2026-11-03), or is a simplex (N = n+1) or cross polytope (N = 2n); otherwise no.
+# universal: yes if (N, n) is listed at https://cohn.mit.edu/harmonic-optima (read 2026-11-03; the page returned 404 on 2026-11-17; archived copy of 2024-06-04: https://web.archive.org/web/20240604174053/https://cohn.mit.edu/harmonic-optima/), or is a simplex (N = n+1) or cross polytope (N = 2n); otherwise no.
 # An empty field means the source does not list the pair. Energy is sum_{i<j} |x_i - x_j|^-(n-2) over N unit vectors in R^n.
 N	n	table_energy	energy_2021	distances	universal
 4	3	3.6742346142	3.67423461417476714729592611205883708794892122098501	1	yes
