@@ -54,8 +54,8 @@ import exact  # noqa: E402
 E7, E8, E10 = Fraction(1, 10 ** 7), Fraction(1, 10 ** 8), Fraction(1, 10 ** 10)
 TOL = Decimal('1e-35')
 HSAFE = Decimal('1e-40')
-EXPECTED = {'grassmannian': 1658, 'game-of-sloanes': 52, 'packomania-hsp4': 152, 'packomania-hsp5': 198,
-            'packomania-hsp6': 161, 'packomania-scu': 239, 'cohn-harmonic': 44, 'spherical-codes': 4369, 'thomson': 1}
+EXPECTED = {'grassmannian': 1666, 'game-of-sloanes': 52, 'packomania-hsp4': 152, 'packomania-hsp5': 198,
+            'packomania-hsp6': 161, 'packomania-scu': 239, 'cohn-harmonic': 44, 'spherical-codes': 5107, 'thomson': 1}
 FOLDERS = ('grassmannian', 'game-of-sloanes', 'packomania-hsp4', 'packomania-hsp5', 'packomania-hsp6',
            'packomania-scu', 'cohn-harmonic',
            'spherical-codes', 'thomson')

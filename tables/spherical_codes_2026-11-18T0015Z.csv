@@ -1,0 +1,25 @@
+# Cosine per (d, N) just before our whole-table sweep upload 1 to the spherical-codes upload server (its log closed at 2026-11-18T00:15:45Z), taken from the "previously" value of its reply for each accepted file that this version keeps; only those rows. proven_optimal and needs_more_optimization as in the other snapshots.
+d,N,cos,proven_optimal,needs_more_optimization
+4,439,0.926352153124,no,no
+7,478,0.702508481453,no,yes
+7,899,0.760245837416,no,
+7,959,0.768440885915,no,no
+8,165,0.496460499905,no,no
+8,317,0.586059587254,no,no
+8,638,0.665956940856,no,
+8,844,0.700241093469,no,
+8,914,0.706469240864,no,no
+8,915,0.706686615980,no,no
+10,207,0.442572512858,no,
+11,653,0.525817650315,no,no
+11,669,0.528053909626,no,no
+13,894,0.499137243596,no,
+14,351,0.364407645119,no,no
+14,930,0.455318273617,no,yes
+14,939,0.455356060414,no,yes
+16,711,0.392068317428,no,
+19,479,0.287868400931,no,no
+19,700,0.322307948827,no,yes
+20,405,0.240888101630,no,
+20,1021,0.321365698115,no,no
+24,910,0.250917885509,no,no
