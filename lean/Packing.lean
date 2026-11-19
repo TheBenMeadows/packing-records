@@ -24,6 +24,8 @@ import Packing.Cube6CasesGe
 import Packing.Cube6CoreGe
 import Packing.Cube6Opposite
 import Packing.Cube6Unique
+import Packing.Cube10Check
+import Packing.Cube10Main
 import Packing.Cert.Check
 import Packing.Cert.CheckPoints
 import Packing.Cert.CheckLink

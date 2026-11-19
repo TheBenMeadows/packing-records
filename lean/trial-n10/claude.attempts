@@ -1,0 +1,78 @@
+2026-11-17T11:46:36-07:00	lake build Packing.Cube10Check	1	193
+2026-11-17T11:49:48-07:00	lake build Packing.Cube10Check	0	168
+2026-11-17T11:53:43-07:00	lake env lean work/t/T1.lean (kernel speed test)	0	70
+2026-11-17T11:54:43-07:00	lake env lean work/t/T0.lean (profiling)	0	46
+2026-11-17T11:55:50-07:00	lake env lean work/t/T2.lean (profiling)	0	67
+2026-11-17T11:59:52-07:00	lake build Packing.Cube10Check	1	127
+2026-11-17T12:03:09-07:00	lake build Packing.Cube10Check	1	140
+2026-11-17T12:05:52-07:00	lake build Packing.Cube10Check	1	130
+2026-11-17T12:10:11-07:00	lake build Packing.Cube10Check	1	134
+2026-11-17T12:17:14-07:00	lake build Packing.Cube10Check	0	156
+2026-11-17T12:20:19-07:00	lake build Packing.Cube10Check	0	155
+2026-11-17T12:20:46-07:00	lake env lean work/t/T4.lean (kernel speed test)	0	8
+2026-11-17T12:22:45-07:00	lake build Packing.Cube10Main	1	137
+2026-11-17T12:23:11-07:00	lake env lean work/t/T4.lean (kernel speed test)	0	81
+2026-11-17T12:26:50-07:00	lake build Packing.Cube10Main	1	132
+2026-11-17T12:32:05-07:00	lake build Packing.Cube10Main	1	130
+2026-11-17T12:34:32-07:00	lake build Packing.Cube10Main	0	128
+2026-11-17T12:37:09-07:00	lake build Packing.Cube10Check	0	147
+2026-11-17T12:38:41-07:00	lake env lean work/t/T4.lean (kernel speed test, forced)	0	91
+2026-11-17T12:39:47-07:00	lake env lean work/t/T5.lean (micro benchmarks)	0	41
+2026-11-17T12:49:10-07:00	lake build Packing.Cube10Main	1	191
+2026-11-17T12:53:17-07:00	lake build Packing.Cube10Main	0	209
+2026-11-17T12:55:16-07:00	lake env lean work/t/T6.lean (Schaer configuration test)	0	89
+2026-11-17T13:19:34-07:00	lake build Packing.Cube10D00 Packing.Cube10D01 Packing.Cube10D02	0	1275
+2026-11-17T13:27:39-07:00	lake build Packing.Cube10Main	0	409
+2026-11-17T13:37:56-07:00	lake build Packing.Cube10D00 Packing.Cube10D01 Packing.Cube10D02	0	444
+2026-11-17T13:45:18-07:00	lake build Packing.Cube10D03 Packing.Cube10D04 Packing.Cube10D05	0	442
+2026-11-17T14:02:54-07:00	lake build Packing.Cube10D06 Packing.Cube10D07 Packing.Cube10D08	0	1056
+2026-11-17T14:14:53-07:00	lake build Packing.Cube10D09 Packing.Cube10D10 Packing.Cube10D11	0	719
+2026-11-17T14:46:05-07:00	lake build Packing.Cube10D12 Packing.Cube10D13 Packing.Cube10D14	1	1872
+2026-11-17T14:52:35-07:00	lake env lean work/t/T7.lean (symTab check timing test)	0	182
+2026-11-17T14:52:40-07:00	lake env lean work/t/T7.lean (symTab timing test; killed after ~3 min because it overlapped a 3-process batch)	killed	180
+2026-11-17T15:27:42-07:00	lake build Packing.Cube10D32	0	1840
+2026-11-17T15:34:37-07:00	lake build Packing.Cube10Sym	1	2255
+2026-11-17T15:45:45-07:00	lake build Packing.Cube10D22	0	668
+2026-11-17T15:45:47-07:00	lake build Packing.Cube10D14	0	2925
+2026-11-17T16:18:01-07:00	lake build Packing.Cube10D15	0	3018
+2026-11-17T16:27:54-07:00	lake build Packing.Cube10D25	0	593
+2026-11-17T16:30:49-07:00	lake build Packing.Cube10D16	0	2702
+2026-11-17T16:39:20-07:00	lake build Packing.Cube10Sym	1	3215
+2026-11-17T16:55:02-07:00	lake build Packing.Cube10D35	0	1453
+2026-11-17T16:58:53-07:00	lake build Packing.Cube10D37	0	1859
+2026-11-17T17:04:56-07:00	lake build Packing.Cube10SymBase	0	593
+2026-11-17T17:06:31-07:00	lake build Packing.Cube10D29	0	1630
+2026-11-17T17:11:38-07:00	lake build Packing.Cube10D33	0	765
+2026-11-17T17:15:24-07:00	lake build Packing.Cube10D34	0	627
+2026-11-17T17:17:41-07:00	lake build Packing.Cube10S00	0	670
+2026-11-17T17:23:11-07:00	lake build Packing.Cube10S01	0	693
+2026-11-17T17:26:49-07:00	lake build Packing.Cube10Tst	0	218
+2026-11-17T17:26:57-07:00	lake build Packing.Cube10S02	0	693
+2026-11-17T17:28:29-07:00	lake build Packing.Cube10S03	0	648
+2026-11-17T17:37:42-07:00	lake build Packing.Cube10S04	0	653
+2026-11-17T17:37:59-07:00	lake build Packing.Cube10S05	0	662
+2026-11-17T17:38:30-07:00	lake build Packing.Cube10S06	0	601
+2026-11-17T17:39:37-07:00	lake build Packing.Cube10S08	0	98
+2026-11-17T17:44:10-07:00	lake build Packing.Cube10D24	0	340
+2026-11-17T17:44:46-07:00	lake build Packing.Cube10S07	0	424
+2026-11-17T17:45:16-07:00	lake build Packing.Cube10D19	0	338
+2026-11-17T17:49:58-07:00	lake build Packing.Cube10D39	0	312
+2026-11-17T17:50:40-07:00	lake build Packing.Cube10D26	0	324
+2026-11-17T17:55:28-07:00	lake build Packing.Cube10D38	0	330
+2026-11-17T17:56:14-07:00	lake build Packing.Cube10D18	0	334
+2026-11-17T17:59:12-07:00	lake build Packing.Cube10D17	0	902
+2026-11-17T18:00:54-07:00	lake build Packing.Cube10D23	0	326
+2026-11-17T18:01:46-07:00	lake build Packing.Cube10D21	0	332
+2026-11-17T18:05:45-07:00	lake build Packing.Cube10D20	0	393
+2026-11-17T18:08:05-07:00	lake build Packing.Cube10D27	0	379
+2026-11-17T18:11:46-07:00	lake build Packing.Cube10D31	0	652
+2026-11-17T18:19:01-07:00	lake build Packing.Cube10D28	0	656
+2026-11-17T18:19:02-07:00	lake build Packing.Cube10D36	0	797
+2026-11-17T18:22:26-07:00	lake build Packing.Cube10D40	0	205
+2026-11-17T18:23:49-07:00	lake build Packing.Cube10D30	0	723
+2026-11-17T18:24:26-07:00	lake build Packing.Cube10Sym	0	324
+2026-11-17T18:24:48-07:00	lake build Packing.Cube10	1	4
+2026-11-17T18:26:39-07:00	lake build Packing.Cube10	1	70
+2026-11-17T18:29:47-07:00	lake build Packing.Cube10	0	136
+2026-11-17T18:36:27-07:00	lake build Packing (stopped after ~5 min: it began rebuilding the unbuilt base library with 4 parallel Lean processes)	killed	300
+2026-11-17T18:37:08-07:00	locked/check.sh /home/bemeadows/lanes/cube10-trial/claude beb5b9f	0	41

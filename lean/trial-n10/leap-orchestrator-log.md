@@ -1,0 +1,123 @@
+# Orchestrator Log: isMaxMinDist_ten
+
+## 1. Lifecycle Checklist
+- [x] [PHASE 1: INIT] Proof graph initialized (`init_graph`)
+- [ ] [PHASE 2: DISPATCH] Dispatch loop running
+- [ ] [PHASE 3: ASSEMBLE] Unified proof assembled (`assemble`)
+- [ ] [PHASE 4: VERIFY] Independent verifier passed (0 sorry, standard axioms)
+- [ ] [PHASE 5: COMPLETE] Final solution copied to target folder (`<target_folder>/answer.lean`), verified identical to the audited file, and report delivered
+
+## 2. Chronological Milestones & Event Log
+- [INIT] Problem root: `/home/bemeadows/lanes/cube10-trial/agy-lemma`, root theorem id: `isMaxMinDist_ten`. Successfully initialized proof graph.
+- [DISPATCH] Subagent b0fe060c-76f4-44b7-93b0-10ee6ee1ae69, node_id: isMaxMinDist_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent b0fe060c-76f4-44b7-93b0-10ee6ee1ae69 recorded planned on isMaxMinDist_ten. Node advanced to formal phase.
+- [DISPATCH] Subagent e28118ea-ed1f-4baf-acf7-661e2beff6b5, node_id: isMaxMinDist_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent e28118ea-ed1f-4baf-acf7-661e2beff6b5 recorded submit on isMaxMinDist_ten with subgoals (has_packing_ten, exists_dist_le_ten). Node moved to review.
+- [DISPATCH] Subagent c0271697-a54e-4f47-b544-ec531c9b9e04, node_id: isMaxMinDist_ten, phase: review, role: lemma_decomposition_reviewer.
+- [RETURN] Subagent c0271697-a54e-4f47-b544-ec531c9b9e04 recorded approved on isMaxMinDist_ten. Decomposition accepted; children has_packing_ten and exists_dist_le_ten released to pool.
+- [DISPATCH] Subagent e02660d9-f340-42d1-9590-a00ae0994591, node_id: has_packing_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent e02660d9-f340-42d1-9590-a00ae0994591 recorded planned on has_packing_ten. Node advanced to formal phase.
+- [DISPATCH] Subagent 3b25b5eb-ab37-4ed0-b924-42dae7807341, node_id: has_packing_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 3b25b5eb-ab37-4ed0-b924-42dae7807341 recorded submit on has_packing_ten (no subgoals). Node has_packing_ten proved!
+- [DISPATCH] Subagent d20788c3-81ed-45d4-bff2-8bcebe7f8223, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent d20788c3-81ed-45d4-bff2-8bcebe7f8223 recorded planned on exists_dist_le_ten. Node advanced to formal phase.
+- [DISPATCH] Subagent c74bcaf7-9832-436e-b52f-7d5c0aba077a, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent c74bcaf7-9832-436e-b52f-7d5c0aba077a recorded replan on exists_dist_le_ten (geometric flaw in central core localization). Node returned to informal planning.
+- [DISPATCH] Subagent cbb1d08b-4866-4224-ba37-f353df238392, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent cbb1d08b-4866-4224-ba37-f353df238392 recorded failed on exists_dist_le_ten (closed unviable 8-cell core route and documented obstructions). Node returned to informal planning.
+- [DISPATCH] Subagent 05b34133-3009-46b9-97f3-a5bbbb8e6b9f, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 05b34133-3009-46b9-97f3-a5bbbb8e6b9f recorded planned on exists_dist_le_ten (slab capacity + column rigidity route). Node advanced to formal phase.
+- [DISPATCH] Subagent 96eda7a8-18dc-4790-b90b-c5f36935782b, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 96eda7a8-18dc-4790-b90b-c5f36935782b recorded replan on exists_dist_le_ten (pointed out that box-pigeonholing alone cannot rule out 10 points since the optimum itself has <= 1 pt per 1/4-box; an algebraic/SOS or distance sum certificate approach is required). Node returned to informal planning.
+- [DISPATCH] Subagent f78047cc-cc78-4c90-8e87-4f8daddfbede, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent f78047cc-cc78-4c90-8e87-4f8daddfbede recorded planned on exists_dist_le_ten (dual-column joint capacity and total count bound 3+2+2+2=9 < 10). Node advanced to formal phase.
+- [DISPATCH] Subagent b3267138-c537-4cbf-9ad6-142d231c3de8, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent b3267138-c537-4cbf-9ad6-142d231c3de8 recorded submit on exists_dist_le_ten with subgoals (column_capacity_le_three, dual_column_joint_capacity, column_partition_sum_ten). Node moved to review.
+- [DISPATCH] Subagent 9dd34055-8ac9-4571-96cc-c49d68364525, node_id: exists_dist_le_ten, phase: review, role: lemma_decomposition_reviewer.
+- [RETURN] Subagent 9dd34055-8ac9-4571-96cc-c49d68364525 recorded replan on exists_dist_le_ten (refuted dual_column_joint_capacity with explicit 6-point counterexample in diagonally opposite columns). Node returned to informal planning.
+- [DISPATCH] Subagent d6763b44-e9a4-4512-a2c6-a51fcc1b8fc0, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent d6763b44-e9a4-4512-a2c6-a51fcc1b8fc0 recorded failed on exists_dist_le_ten (falsified half-cube capacity <= 5 with explicit 6-point counterexample in [0,1]^2 x [0,1/2] having pairwise dist > 3/4). Node returned to informal planning.
+- [DISPATCH] Subagent 2cdd90b2-4e22-4092-9cda-4d5a5ed7f2a3, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 2cdd90b2-4e22-4092-9cda-4d5a5ed7f2a3 recorded planned on exists_dist_le_ten (Revision 4: axial projection + 3-layer distribution + infinitesimal contact rigidity). Node advanced to formal phase.
+- [DISPATCH] Subagent 4db0a953-7847-4c4b-b8cf-b71a6f720b5d, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 4db0a953-7847-4c4b-b8cf-b71a6f720b5d recorded replan on exists_dist_le_ten (audited Revision 4: infinitesimal variation assumes Schaer coordinates, and crux was a restatement of the full theorem). Node returned to informal planning.
+- [DISPATCH] Subagent b221bfab-b040-4510-866e-9b25b5fe8f22, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent b221bfab-b040-4510-866e-9b25b5fe8f22 recorded planned on exists_dist_le_ten (Revision 5: slab capacity + axial 3-layer distribution + central cylinder tube confinement). Node advanced to formal phase.
+- [DISPATCH] Subagent 1e1b1fe8-7dbc-492a-aa6f-81d5ce6f6862, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 1e1b1fe8-7dbc-492a-aa6f-81d5ce6f6862 recorded replan on exists_dist_le_ten (audited Revision 5: central tube localization refuted by outer corner points at z = 0.74). Node returned to informal planning.
+- [DISPATCH] Subagent 49e71ef7-b876-494e-b9b8-404fd2a46cf1, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 49e71ef7-b876-494e-b9b8-404fd2a46cf1 recorded planned on exists_dist_le_ten (5-cylinder Voronoi partition + Positivstellensatz certificates from gen_n5.py). Node advanced to formal phase.
+- [DISPATCH] Subagent ce3884a3-1b36-4670-8a5b-1b90c30ab96a, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [DISPATCH] Subagent e4ccbb03-53da-4261-82a9-62b58eb940c9, node_id: isMaxMinDist_ten, phase: review, role: lemma_decomposition_reviewer.
+- [RETURN] Subagent e4ccbb03-53da-4261-82a9-62b58eb940c9 recorded approved on isMaxMinDist_ten. Decomposition confirmed sound; child has_packing_ten is formal_proved; exists_dist_le_ten continues in informal phase.
+- [DISPATCH] Subagent 64e79ac2-da9a-4779-9b09-749c6f4dad2a, node_id: isMaxMinDist_ten, phase: review, role: lemma_decomposition_reviewer.
+- [RETURN] Subagent 64e79ac2-da9a-4779-9b09-749c6f4dad2a recorded approved on isMaxMinDist_ten. Decomposition confirmed sound; child has_packing_ten is already formal_proved; exists_dist_le_ten continues in informal phase.
+- [RETURN] Subagent ce3884a3-1b36-4670-8a5b-1b90c30ab96a recorded replan on exists_dist_le_ten (audited Revision 6: subgoals s1-s5 do not logically imply exists_dist_le_ten, and Step 6.3 refuted by explicit counterexample w = (1/2, 1/2, 0.35)). Node returned to informal planning.
+- [DISPATCH] Subagent 59bf3709-30b4-4f1f-9106-28fbda322d87, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 59bf3709-30b4-4f1f-9106-28fbda322d87 recorded failed on exists_dist_le_ten (formally closed local cylinder/slab partition approaches; documented barrier that Schaer's configuration allocates 2 pts/cylinder satisfying all local bounds; requires global rigidity or automated verified branch-and-bound partition). Node returned to informal planning.
+- [DISPATCH] Subagent 3e6af804-238a-4945-8b4f-c029958319a3, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 3e6af804-238a-4945-8b4f-c029958319a3 recorded failed on exists_dist_le_ten (verified contact network infinitesimal rigidity via HiGHS Farkas multipliers, closed local partition routes, documented requirements for global resolution). Node returned to informal planning.
+- [DISPATCH] Subagent 9890699f-d311-4174-9c34-16554beda0f8, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 9890699f-d311-4174-9c34-16554beda0f8 recorded failed on exists_dist_le_ten (exhaustively analyzed & ruled out continuous volume, quadratic distance sums, Borsuk covering, and 1D fibers; confirmed leaves open formalizing Schaer 1994 contact classification or automated branch-and-bound). Node returned to informal planning.
+- [DISPATCH] Subagent 2638ec57-45fc-4d18-abeb-64d7a36ad763, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 2638ec57-45fc-4d18-abeb-64d7a36ad763 recorded failed on exists_dist_le_ten (ruled out SDP Gram relaxations and 2D projections; proved general impossibility theorem that independent local capacity bounds always sum to >= 10). Node returned to informal planning.
+- [DISPATCH] Subagent c03cccbe-4946-4fe6-926c-e00a60fd6fc6, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent c03cccbe-4946-4fe6-926c-e00a60fd6fc6 recorded failed on exists_dist_le_ten (proved active-constraint cluster barrier preventing standard interval branch-and-bound near optimal points; confirmed any independent local decomposition requires full global contact graph). Node returned to informal planning.
+- [DISPATCH] Subagent f8687aa0-562b-4695-bd63-60de94bc34bd, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent f8687aa0-562b-4695-bd63-60de94bc34bd recorded failed on exists_dist_le_ten (ruled out boundary-truncated Voronoi volumes with 37% slack, verified degree >= 4 SOS requires 46k monomials exceeding kernel limits). Node returned to informal planning.
+- [DISPATCH] Subagent 7dfa5b00-9ccc-4eff-9524-6b981a44e149, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 7dfa5b00-9ccc-4eff-9524-6b981a44e149 recorded failed on exists_dist_le_ten (proved branch-and-bound box complexity barrier in 30D exceeds 10^38 symmetry-reduced boxes; confirmed active-contact rank deficiency prevents modular localization). Node returned to informal planning.
+- [DISPATCH] Subagent 5c20a1ea-84c7-4005-8258-e0677a622f1b, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 5c20a1ea-84c7-4005-8258-e0677a622f1b recorded failed on exists_dist_le_ten (proved Graph-Laplacian Max-Cut barrier gives >= 62.5% slack, and 9-point sub-configuration achieves min dist sqrt(3)/2 > 3/4). Node returned to informal planning.
+- [DISPATCH] Subagent 52206297-a430-495b-a2a3-61522426ca3d, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 52206297-a430-495b-a2a3-61522426ca3d recorded failed on exists_dist_le_ten (proved continuous dual LP/Delsarte bound B(3/4) >= 10, and ruled out Delaunay volume decompositions due to slivers). Node returned to informal planning.
+- [DISPATCH] Subagent 8e2182f2-2030-4249-9a74-64007d5b7048, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 8e2182f2-2030-4249-9a74-64007d5b7048 recorded failed on exists_dist_le_ten (proved boundary packing max min dist <= 0.575 << 0.75, non-concave KKT/Farkas local optimality cannot certify global absence of distant local maxima, McCormick envelopes without partition give 0). Node returned to informal planning.
+- [DISPATCH] Subagent 113805ed-8dc0-4e4f-a4ee-269e96e208ff, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 113805ed-8dc0-4e4f-a4ee-269e96e208ff recorded failed on exists_dist_le_ten (ruled out Minkowski container dilation with 58.8% slack, Cauchy-Crofton mean width, and torus periodization). Node returned to informal planning.
+- [DISPATCH] Subagent 4083da62-1788-4d3a-9524-f8d272b0e31a, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 4083da62-1788-4d3a-9524-f8d272b0e31a recorded failed on exists_dist_le_ten (ruled out Riesz s-energy with 40% slack, L1 and Linf metric relaxations, and Voronoi covering radius duality). Node returned to informal planning.
+- [DISPATCH] Subagent a5abfab3-ae81-43af-9430-0571eb2ad102, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent a5abfab3-ae81-43af-9430-0571eb2ad102 recorded failed on exists_dist_le_ten (ruled out Schoenberg EDM trace bounds with 54% slack, Wasserstein optimal transport quantization error, and analyzed 9-pt covering radius sqrt(5)/4). Node returned to informal planning.
+- [DISPATCH] Subagent e33961e6-7c21-41ad-9a49-1a9e59941c7c, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent e33961e6-7c21-41ad-9a49-1a9e59941c7c recorded replan (worker idled after failed `exact?` call). Node returned to informal planning.
+- [DISPATCH] Subagent 464c73e6-3f4a-4874-9552-8dcc99ec7d7c, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 464c73e6-3f4a-4874-9552-8dcc99ec7d7c recorded planned (volume-based argument). Node moved to formal phase.
+- [DISPATCH] Subagent 4afc5f2f-78b2-48c0-97aa-5f8a19a378bb, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [DISPATCH] Subagent 2da85233-10a8-4960-b13b-d16c36437b2a, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 62e94b1e-4e07-42c0-9ab7-924dd2dfb9bc recorded planned. Node moved to formal phase.
+- [RETURN] Subagent 5c91f277-1341-4b55-8c81-055fcc35dc0d recorded submit. Node moved to review.
+- [RETURN] Subagent 2606df73-2bd4-4d9f-81c0-4cfa68a2c002 recorded replan (decomposition restatement). Node returned to informal planning.
+- [RETURN] Subagent 03fbfda0-72bf-4fa8-b8f6-bcb21ab0a77e failed on exists_dist_le_ten (RESOURCE_EXHAUSTED). Claim released.
+- [RETURN] Subagent 4bd3d800-fb70-4faf-a005-9d23368234dd recorded planned (new decomposition). Node moved to formal phase.
+- [RETURN] Subagent 6b616e1d-5e8d-4c99-b300-bf2e7fa8e873 recorded submit. Node moved to review.
+- [RETURN] Subagent e74415a6-1a59-4b84-9b19-4c5dd15eaf51 recorded replan (decomposition restatement). Node returned to informal planning.
+- [RETURN] Subagent 2f177c7e-97a5-47ad-9c07-e7b194c8e7ca recorded planned. Node moved to formal phase.
+- [RETURN] Subagent b5c898b6-e236-48b2-9e2f-99a177033a4c recorded replan (partition impossibility). Node returned to informal planning.
+- [RETURN] Subagent 447cc47b-759d-45a1-b014-f607cf60210d recorded planned (octant partitioning and pigeonhole strategy). Node moved to formal phase.
+- [DISPATCH] Subagent 73abbc4a-f56a-44de-9f67-48394a24b89c, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 34c1b596-a0c8-4ba1-b409-a6245b3fb28e recorded replan (worker idled). Node returned to informal planning.
+- [RETURN] Subagent eaa9cc64-0f6b-402c-ab32-de62d3d87e54 recorded planned. Node moved to formal phase.
+- [DISPATCH] Subagent 265f0904-4420-404c-9008-c27660dca6e3, node_id: exists_dist_le_ten, phase: formal, role: lemma_proof_worker.
+- [RETURN] Subagent 464c73e6-3f4a-4874-9552-8dcc99ec7d7c recorded planned (volume-based argument). Node moved to formal phase.
+- [RETURN] Subagent 4afc5f2f-78b2-48c0-97aa-5f8a19a378bb recorded failed on exists_dist_le_ten (verification failed with 'sorry'). Worker is currently investigating failure logs and blueprint.
+- [RETURN] Subagent a698422c-4a68-44ab-9880-cb5a14d55c03 recorded failed on exists_dist_le_ten (ruled out Tverberg 3-partitions, Alexandrov-Fenchel quermassintegrals, and metric negative type trace bounds). Node returned to informal planning.
+- [DISPATCH] Subagent 03bde9a6-28bf-4835-a0c6-b96c7c2e4d0e, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 03bde9a6-28bf-4835-a0c6-b96c7c2e4d0e recorded failed on exists_dist_le_ten (ruled out Cayley-Menger determinants, Jung circumradius, and contact sphere cap solid angle deficits). Node returned to informal planning.
+- [DISPATCH] Subagent 3b995adf-8cd9-4323-8d22-ba1a4989972b, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 3b995adf-8cd9-4323-8d22-ba1a4989972b recorded failed on exists_dist_le_ten (proved Maxwell-Laman generic rigidity has 11-edge deficit and 11D flex space, Hadwiger cube covering has 170% slack, Lovasz theta saturated at 9). Node returned to informal planning.
+- [DISPATCH] Subagent 8c0180d5-155a-4246-9d14-17eb2628e605, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 8c0180d5-155a-4246-9d14-17eb2628e605 recorded failed on exists_dist_le_ten (ruled out Loomis-Whitney projection isoperimetry, Chebyshev transfinite diameter with 27.5% slack, and Radon partitions). Node returned to informal planning.
+- [DISPATCH] Subagent f7caa700-26e5-481c-a343-a00f85fa8563, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent f7caa700-26e5-481c-a343-a00f85fa8563 recorded failed on exists_dist_le_ten (ruled out Vietoris-Rips persistent homology with 15.5% slack, polyhedral 1-skeletons, Voronoi cell surface area isoperimetry, and Chebyshev product expansions). Node returned to informal planning.
+- [DISPATCH] Subagent 8a053a48-b445-401b-8c4a-f88dabbe70c9, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 8a053a48-b445-401b-8c4a-f88dabbe70c9 recorded failed on exists_dist_le_ten (ruled out intrinsic volumes, electrostatic Newtonian capacity with 21.4% slack, Ollivier-Ricci curvature, and analyzed kinematic flexes of contact 4-cycles). Node returned to informal planning.
+- [DISPATCH] Subagent 4a8f52af-3cf9-41aa-8165-7532b2d8bed6, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 4a8f52af-3cf9-41aa-8165-7532b2d8bed6 recorded failed on exists_dist_le_ten (ruled out Sobolev-Poincare inequality with 86% slack, Blaschke-Santalo Mahler volume product, and proved Conf_10([0,1]^3) is simply connected). Node returned to informal planning.
+- [DISPATCH] Subagent 5fe91bdc-143b-4354-88c0-48dc106804e7, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 5fe91bdc-143b-4354-88c0-48dc106804e7 recorded failed on exists_dist_le_ten (ruled out Brunn-Minkowski difference bodies, Kepler packing density with 44% slack, Urysohn widths, and KKM simplex coverings). Node returned to informal planning.
+- [DISPATCH] Subagent 14d44bdc-bc92-42ff-af14-135bc8bc917e, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [RETURN] Subagent 14d44bdc-bc92-42ff-af14-135bc8bc917e recorded failed on exists_dist_le_ten (ruled out Petty projection volume products, Gromov waist inequalities, Fuglede spectral packing, and Lp metric contractions). Node returned to informal planning.
+- [DISPATCH] Subagent e32dce4a-e802-458f-b547-503275e4930b, node_id: exists_dist_le_ten, phase: informal, role: lemma_informal_prover.
+- [DISPATCH] Subagent 203d2206-c77d-4a40-80b7-3a22489141db, node_id: isMaxMinDist_ten, phase: review, role: lemma_decomposition_reviewer.
+- [RETURN] Subagent 203d2206-c77d-4a40-80b7-3a22489141db recorded approved on isMaxMinDist_ten. Decomposition confirmed sound; child has_packing_ten is already formal_proved; exists_dist_le_ten continues in informal phase.
