@@ -208,7 +208,7 @@ lake build PackingCube10
 lake env lean AuditCube10.lean
 ```
 
-This starts one Lean process per core for the 42 data files, which take about four hours of process time in all.
+`lake build` compiles none of the `Packing/Cube10*.lean` files, because `Packing.lean` does not import them; that keeps the statements in `Challenge/` as they are. `lake build PackingCube10` compiles the checker and its soundness proof (about six minutes) and then starts one Lean process per core for the 42 data files, which take about four hours of process time in all.
 
 To check the cells:
 
