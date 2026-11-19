@@ -15,6 +15,12 @@ name = "Packing"
 [[lean_lib]]
 name = "PackingCells"
 
+# The best arrangement of ten points in a cube: checker, soundness proof and 41 data files that
+# need up to 28 GB of memory each. `lake build` leaves all of it out, so that the statements in
+# Challenge/ stay as they are: build with `lake build PackingCube10` or `gate/build_cube10.sh`.
+[[lean_lib]]
+name = "PackingCube10"
+
 # Trusted statements for `lake comparator`: Mathlib only, definitions copied from Packing,
 # every theorem closed with `sorry`. Read these files to check what is proved.
 [[lean_lib]]

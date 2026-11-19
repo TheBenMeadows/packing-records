@@ -1,0 +1,17 @@
+{
+ "pin": "238da190d509a96da7f11190e5fbed533bb8af7d",
+ "lean_tree_sha256": "fa860a0d15d5e525fb99a1855215e65ece36e2c1cc6c21c6e4acbe69a6b2671d",
+ "repo_head": "238da190d509a96da7f11190e5fbed533bb8af7d",
+ "lean_version": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+ "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz x4",
+ "cube10_files": 56,
+ "challenge_check_rc": 0,
+ "sorry_or_native_decide": "0",
+ "build_rc": 0,
+ "build_seconds": 6122,
+ "mem_total_kb": "32869284",
+ "audit": [
+  "'Packing.Cube.isMaxMinDist_ten' depends on axioms: [propext, Classical.choice, Quot.sound]"
+ ],
+ "wall_seconds": 6335
+}

@@ -1,0 +1,4 @@
+approved 2026-11-17T10:56:55-07:00
+stub+runfolder created by orchestrator 2026-11-17T12:55:42-07:00 (agy idle since ~11:05 waiting on these inputs)
+deadline extended by Ben to 2026-11-18T00:48:55-07:00 (+1h52m idle 11:05-12:57, missed by orchestrator) 2026-11-17T12:57:23-07:00
+end 2026-11-18T00:57:27-07:00 deadline 00:48:55 passed; quota exhausted (see pane log); check: FAIL: sorry or native_decide present

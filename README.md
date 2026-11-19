@@ -60,7 +60,7 @@ The checker reads every file, recomputes its value with exact rational arithmeti
 
 ## Lean proofs
 
-`lean/` holds proofs checked by Lean 4 with Mathlib. They cover the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables (a configuration with that value exists; for Grassmannian cells, it is the span of the vectors in the file; `lean/README.md` says which cells and why), and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube. The harmonic and Thomson tables have no Lean certificates. `lean/README.md` lists the theorems, the definitions behind them, what is not proved, and how to rebuild.
+`lean/` holds proofs checked by Lean 4 with Mathlib. They cover the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables (a configuration with that value exists; for Grassmannian cells, it is the span of the vectors in the file; `lean/README.md` says which cells and why), and the best arrangement of 2, 3, 4, 5, 6, 8, 9 and 10 points in a cube (the proof for 10 is built separately: `lake build PackingCube10`). The harmonic and Thomson tables have no Lean certificates. `lean/README.md` lists the theorems, the definitions behind them, what is not proved, and how to rebuild.
 
 ## File formats
 

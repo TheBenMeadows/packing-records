@@ -1,6 +1,6 @@
 # Lean formalization
 
-Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8 and 9 points in a cube, with its uniqueness for each of those N. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file of the library uses `sorry` or `native_decide`. The statements in `Challenge/` end in `sorry` on purpose (see "Statements checked with `lake comparator`").
+Proofs checked by Lean 4 with Mathlib (both at v4.35.0) for three things in this repository: the simplex and orthoplex bounds that the Grassmannian and spherical-code tables print as upper bounds, a certificate for 2,489 of the 6,829 cells of the seven distance tables in `cells.csv`, and the best arrangement of 2, 3, 4, 5, 6, 8, 9 and 10 points in a cube, with its uniqueness for each of those N except 10. Every theorem named below depends only on Lean's three standard axioms (`propext`, `Classical.choice`, `Quot.sound`). No file of the library uses `sorry` or `native_decide`. The statements in `Challenge/` end in `sorry` on purpose (see "Statements checked with `lake comparator`").
 
 ## Coverage of the tables
 
@@ -37,6 +37,7 @@ The other 4,340 cells, all spherical codes, have no Lean certificate yet. To add
 | `Packing/CubeUniqueSmall.lean` | `isUniqueMaxMinDist_three`, `isUniqueMaxMinDist_four` | Three or four points of the unit cube pairwise at distance at least sqrt(2) are corners of a regular tetrahedron inscribed in the cube. |
 | `Packing/Cube8Unique.lean` | `isUniqueMaxMinDist_eight` | Eight points of the unit cube pairwise at distance at least 1 are the eight corners. |
 | `Packing/Cube9Unique.lean` | `isUniqueMaxMinDist_nine` | Nine points of the unit cube pairwise at distance at least sqrt(3)/2 are the centre and the eight corners. |
+| `Packing/Cube10.lean` | `isMaxMinDist_ten` | The largest minimum distance among 10 points of the unit cube is 3/4. Built by `lake build PackingCube10`, not by `lake build`. |
 | `Packing/Cube6.lean` | `isMaxMinDist_six` | The largest minimum distance among 6 points of the unit cube is 3 sqrt(2)/4. |
 | | `isMaxRadius_six` | The largest radius of 6 equal balls packed in the unit cube is (9 - 6 sqrt(2))/2. |
 | `Packing/Cube6Unique.lean` | `isUniqueMaxMinDist_six` | Every arrangement of 6 points of the unit cube with pairwise distances at least 3 sqrt(2)/4 is the image of Schaer's octahedron, in some order, under a symmetry of the cube. |
@@ -92,7 +93,8 @@ The families in these definitions are indexed, so two members can coincide. They
 - The Lean data of a cell are written by a generator from the data file. Lean does not read the data file. Each generator stops unless the file has the sha256 recorded in `cells.csv`, and the manifests record that sha256.
 - `HasBallPackingInBall` and `HasBallPackingInCube` describe a packing by its centres. They are not derived from `Metric.ball`.
 - The harmonic-energy and Thomson tables have no Lean certificates. Their values need square roots and real powers.
-- For points in a cube, N = 10 and 14 are solved in the literature and are not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5, 6, 8 and 9.
+- For points in a cube, N = 14 is solved in the literature and is not formalized here. Uniqueness of the configuration is proved for N = 2, 3, 4, 5, 6, 8 and 9. For N = 10 only the value is proved; Schaer's paper also proves that the arrangement is unique.
+- The proof for N = 10 is a case analysis found by a search and checked by the kernel. It is not a formalization of Schaer's proof, which we have not read. `isMaxMinDist_ten` is not among the theorems of `comparator.json`, and `Audit.lean` does not print its axioms; `AuditCube10.lean` does.
 
 ## Five points in a cube
 
@@ -130,6 +132,28 @@ Step 3 is the one inequality here that is not a bound on a diameter. For three p
 `Packing/Cube6Unique.lean` runs the argument with distances at least 3 sqrt(2)/4. Steps 1, 2 and 4 hold as before, because the bounds they use have room to spare. Step 3 becomes: three of the points in a slab `[0,1] x [0,1] x [0,1/4]` do not all have third coordinate below 1/4 (`prism_three_ge`). Its certificate has one more term on the right, the product of the three numbers 1/4 - z (`gen/n6_prism_ge_search.py`, `gen/gen_n6_prism_ge.py`, `Packing/Cube6PrismGe.lean`). In step 5 the three points nearest the origin then lie in `[0, 3/4]^3` with every pair at squared distance exactly 9/8, which makes them (3/4, 0, 0), (0, 3/4, 0) and (0, 0, 3/4) (`six_normal_ge`). The same statement for the arrangement reflected in all three coordinates gives the other three points.
 
 The generators of the case analyses write the files for this argument when called with `--ge`: `Packing/Cube6CasesGe.lean`, `Packing/Cube6CoreGe.lean` and `Packing/Cube6Opposite.lean`. These three files and `Cube6PrismGe.lean` take about half an hour to compile on one core.
+
+## Ten points in a cube
+
+Schaer (1994) proved that ten points of the unit cube can be pairwise at distance 3/4 and no more. `Packing/Cube10.lean` checks his arrangement pair by pair: the four corners of the bottom face, the same four corners at height 3/4, and the points (1/2, 1/2, 1/4) and (1/2, 1/2, 1).
+
+The upper bound is proved another way.
+
+1. Each point gets a key from 0 to 15: the halves of [0, 1] that hold its first two coordinates and the quarter that holds its third (`key` in `Packing/Cube10Main.lean`). The box of a key measures 1/2 by 1/2 by 1/4, so two points with the same key are at squared distance at most 1/4 + 1/4 + 1/16 = 9/16. Ten points pairwise further apart than 3/4 therefore have ten different keys.
+2. Sorted, the ten keys are one of the 8,008 sublists of length 10 of 0, ..., 15. The eight reflections of the cube in its three coordinates permute these patterns (`keyT`, `reflPt`), and 1,050 patterns represent them all.
+3. For each of the 1,050 patterns, the data hold a proof that no ten points, one in each box of the pattern, are pairwise further apart than 3/4. A proof is a tree. An inner node splits the interval of one coordinate of one point. A leaf names two points that are at squared distance at most 9/16 wherever they lie in their intervals, or gives nonnegative weights for which the weighted sum of the squared distances minus 9/16 is at most 0. The checker bounds that sum at the vertices of the boxes, which is enough because a sum of squares is convex in each coordinate.
+
+`Packing/Cube10Check.lean` holds the checker `check`, the proof that a state it accepts contains no ten points pairwise further apart than 3/4 (`check_sound`), and a second version `checkK` written with `Nat` operations and recursors, which the kernel evaluates quickly and which is proved equal to the first. Coordinates are integers out of 1,024. `exists_dist_le_ten_of_data` in `Packing/Cube10Main.lean` derives the bound from any list of accepted proofs that covers the 1,050 patterns.
+
+The data are generated. `gen/gen_n10_run.py` searches for the trees with `gen/gen_n10.py`: a branch and bound that splits intervals, with the weights of a leaf taken from a linear program in floating point and then rounded to integers. The search is not trusted; the kernel checks every tree. `gen/gen_n10_emit.py` writes the trees to `Packing/Cube10D00.lean` to `Cube10D40.lean`, the table that sends each of the 8,008 patterns to its representative to `Packing/Cube10SymBase.lean`, `Cube10S00.lean` to `Cube10S08.lean` and `Cube10Sym.lean`, and the assembly to `Packing/Cube10Data.lean`. All 53 generated files are in the repository (4.9 MB), so the build does not run the generators, which need `numpy` and `scipy`. Another run of the search can return different trees; the files here are those of the run in the run record.
+
+```
+cd gen
+uv run --script gen_n10_run.py 0 1 <dir> 64 256
+uv run --script gen_n10_emit.py <dir> ../Packing 15000
+```
+
+The first command takes a part number and a number of parts, so that several processes can share the work.
 
 ## Cell certificates
 
@@ -175,7 +199,18 @@ lake build
 lake env lean Audit.lean
 ```
 
-`lake build` compiles the bounds, the cube theorems, the checkers, their soundness proofs and the tests. Every line that `Audit.lean` prints must end with `[propext, Classical.choice, Quot.sound]`.
+`lake build` compiles the bounds, the cube theorems for up to nine points, the checkers, their soundness proofs and the tests. Every line that `Audit.lean` prints must end with `[propext, Classical.choice, Quot.sound]`.
+
+To check the theorem for ten points:
+
+```
+lake build PackingCube10
+lake env lean AuditCube10.lean
+```
+
+`lake build` compiles none of the `Packing/Cube10*.lean` files, because `Packing.lean` does not import them; that keeps the statements in `Challenge/` as they are. `lake build PackingCube10` compiles the checker and its soundness proof (about six minutes) and then starts one Lean process per core for the 41 data files. Three at a time they took 87 minutes of wall time (see the run record).
+
+Memory: a Lean process that only imports Mathlib and the checker uses 6.9 GB. A data file uses between 10 and 28 GB, because the kernel keeps what it computed for a tree until the tree is checked, and 15 of the 1,050 trees are larger than 50 KB (the largest, 121 KB, needs 24.8 GB on its own). On a machine with less than about 30 GB per core, `lake build PackingCube10` runs out of memory. `gate/build_cube10.sh` builds the same target with one data file at a time (`PAR=2 gate/build_cube10.sh` for two), and then needs 30 GB in all.
 
 To check the cells:
 
@@ -243,6 +278,8 @@ The files that the cells import, the three lists and the three manifests are the
 
 **Comparator** (2026-11-16, Kaggle CPU kernel `packing-lean-comparator`, 4 cores, summary in `gate/summaries/comparator.json`). `gate/comparator_run.py` clones this repository at `beb5b9f`, lays this tree over it, writes the seven sampled cell files, builds `Challenge` and `Solution` and runs `lake comparator` on the 53 theorems of `comparator.json`. Kaggle containers do not allow the namespaces `bwrap` needs, so each run was repeated with `--inadvisably-no-sandbox` and the container was the only isolation. `lake comparator` accepted (Lean's kernel, 287 s). `lake comparator --paranoid` accepted: Lean's paranoid and default kernels, lean4lean, nanoda, con-leche and con-ron (con-leche and con-ron report 35,817 declarations, `--verified`), 702 s. As a control, the same run with `d ≤ dist` changed to `d < dist` in the challenge's `IsMaxMinDist` was rejected: `Const does not match between challenge and target 'Packing.Cube.IsMaxMinDist'`. A comparison of the 195 constants of the challenge with the library's (level parameters, reducibility hints, safety and hashes of type and value) found no difference.
 
+**Ten points** (2026-11-19, a 12-core x86-64 machine, clean clone at `238da19` with the three hand-written files and the three generators laid over it). The search ran in six processes with Python 3.12.14, numpy 2.5.5 and scipy 1.18.1 and returned a tree for each of the 1,050 patterns in 15 minutes. `gen_n10_emit.py` wrote the 53 files that are in this tree. Built three modules at a time on that machine (47 GB), the 41 data files, the nine table files, `Cube10SymBase`, `Cube10Sym`, `Cube10Data` and `Cube10` passed in 87 minutes of wall time, the slowest three data files in 572 s. `isMaxMinDist_ten` depends on the three standard axioms. Checked one at a time, the seven largest data files took 109 to 364 s and 14.2 to 28.0 GB each, and three of the smallest 43 to 60 s and 9.8 to 10.9 GB. An earlier emission of the same trees into 1,051 smaller files also passed. From a clean clone at `238da19` with this tree laid over it (Kaggle CPU kernel `packing-lean-gate-cube10`, 4 cores, 31 GB, `gate/gate_cube10.py`, summary in `gate/summaries/cube10.json`), `gate/build_cube10.sh` built `PackingCube10` with one data file at a time in 102 minutes: the 41 data files in 5,569 s, the slowest in 402 s. `AuditCube10.lean` printed the three standard axioms, and `gen_challenge.py --check` found `Challenge/` unchanged. A first run of that kernel with `lake build PackingCube10`, four processes at once, ran out of memory on seven data files.
+
 ## Notes on kernel speed
 
 These measurements on cell 11-2-60 decided the shape of `Check.lean`.
@@ -259,5 +296,6 @@ These measurements on cell 11-2-60 decided the shape of `Check.lean`.
 - J. Schaer, "On the densest packing of spheres in a cube", Canad. Math. Bull. 9 (1966), 265-270.
 - J. Schaer, "The densest packing of five spheres in a cube", Canad. Math. Bull. 9 (1966), 271-274.
 - J. Schaer, "The densest packing of six spheres in a cube", Canad. Math. Bull. 9 (1966), 275-280.
+- J. Schaer, "The densest packing of ten congruent spheres in a cube", in Intuitive Geometry (Szeged, 1991), Colloq. Math. Soc. János Bolyai 63, North-Holland (1994), 403-424.
 
 The Lean files and the generators were written with AI coding assistants. The Lean kernel checks every proof.
