@@ -15,7 +15,7 @@ name = "Packing"
 [[lean_lib]]
 name = "PackingCells"
 
-# The best arrangement of ten points in a cube: checker, soundness proof and 42 data files that
+# The best arrangement of ten points in a cube: checker, soundness proof and 41 data files that
 # take about four CPU hours in the kernel. `lake build` leaves all of it out, so that the
 # statements in Challenge/ stay as they are: build with `lake build PackingCube10`.
 [[lean_lib]]
