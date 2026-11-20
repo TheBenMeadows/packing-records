@@ -1,0 +1,50 @@
+{
+ "pin": "10bb9a04563a7818852710dfb24cda45631d3470",
+ "cpu": [
+  " Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "4",
+  "MemTotal:       32869296 kB",
+  ""
+ ],
+ "build_PackingCube10": {
+  "rc": 0,
+  "seconds": 4970
+ },
+ "wall_seconds": 9657,
+ "build_ChallengeCube10": {
+  "rc": 0,
+  "seconds": 35
+ },
+ "default": {
+  "sandbox": {
+   "rc": 1,
+   "seconds": 1,
+   "max_rss_kb": "108660",
+   "tail": "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\nerror: Child exited with 1"
+  },
+  "nosandbox": {
+   "rc": 0,
+   "seconds": 4284,
+   "max_rss_kb": "8928440",
+   "tail": "Lean default kernel accepts the solution\nYour solution is okay!"
+  }
+ },
+ "build_ChallengeCube10_mutated": {
+  "rc": 0,
+  "seconds": 79
+ },
+ "mutation": {
+  "sandbox": {
+   "rc": 1,
+   "seconds": 0,
+   "max_rss_kb": "108724",
+   "tail": "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.\nerror: Child exited with 1"
+  },
+  "nosandbox": {
+   "rc": 1,
+   "seconds": 97,
+   "max_rss_kb": "6982640",
+   "tail": "error: Challenge and solution theorem statement do not match: 'Packing.Cube.isMaxMinDist_ten'"
+  }
+ }
+}

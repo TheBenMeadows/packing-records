@@ -40,7 +40,6 @@ import Packing.Cube10D36
 import Packing.Cube10D37
 import Packing.Cube10D38
 import Packing.Cube10D39
-import Packing.Cube10D40
 
 namespace Packing.Cube
 
@@ -50,52 +49,51 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 
 /-- The checked proofs, one for each pattern up to reflection. -/
-noncomputable def reps10 : List Ent := R00 ++ R01 ++ R02 ++ R03 ++ R04 ++ R05 ++ R06 ++ R07 ++ R08 ++ R09 ++ R10 ++ R11 ++ R12 ++ R13 ++ R14 ++ R15 ++ R16 ++ R17 ++ R18 ++ R19 ++ R20 ++ R21 ++ R22 ++ R23 ++ R24 ++ R25 ++ R26 ++ R27 ++ R28 ++ R29 ++ R30 ++ R31 ++ R32 ++ R33 ++ R34 ++ R35 ++ R36 ++ R37 ++ R38 ++ R39 ++ R40
+noncomputable def reps10 : List Ent := R00 ++ R01 ++ R02 ++ R03 ++ R04 ++ R05 ++ R06 ++ R07 ++ R08 ++ R09 ++ R10 ++ R11 ++ R12 ++ R13 ++ R14 ++ R15 ++ R16 ++ R17 ++ R18 ++ R19 ++ R20 ++ R21 ++ R22 ++ R23 ++ R24 ++ R25 ++ R26 ++ R27 ++ R28 ++ R29 ++ R30 ++ R31 ++ R32 ++ R33 ++ R34 ++ R35 ++ R36 ++ R37 ++ R38 ++ R39
 
 theorem reps10_ok : ∀ e ∈ reps10, okEnt e = true := by
-  have e00 : R00.all okEnt = true := by rw [← allK_eq]; exact R00_ok
-  have e01 : R01.all okEnt = true := by rw [← allK_eq]; exact R01_ok
-  have e02 : R02.all okEnt = true := by rw [← allK_eq]; exact R02_ok
-  have e03 : R03.all okEnt = true := by rw [← allK_eq]; exact R03_ok
-  have e04 : R04.all okEnt = true := by rw [← allK_eq]; exact R04_ok
-  have e05 : R05.all okEnt = true := by rw [← allK_eq]; exact R05_ok
-  have e06 : R06.all okEnt = true := by rw [← allK_eq]; exact R06_ok
-  have e07 : R07.all okEnt = true := by rw [← allK_eq]; exact R07_ok
-  have e08 : R08.all okEnt = true := by rw [← allK_eq]; exact R08_ok
-  have e09 : R09.all okEnt = true := by rw [← allK_eq]; exact R09_ok
-  have e10 : R10.all okEnt = true := by rw [← allK_eq]; exact R10_ok
-  have e11 : R11.all okEnt = true := by rw [← allK_eq]; exact R11_ok
-  have e12 : R12.all okEnt = true := by rw [← allK_eq]; exact R12_ok
-  have e13 : R13.all okEnt = true := by rw [← allK_eq]; exact R13_ok
-  have e14 : R14.all okEnt = true := by rw [← allK_eq]; exact R14_ok
-  have e15 : R15.all okEnt = true := by rw [← allK_eq]; exact R15_ok
-  have e16 : R16.all okEnt = true := by rw [← allK_eq]; exact R16_ok
-  have e17 : R17.all okEnt = true := by rw [← allK_eq]; exact R17_ok
-  have e18 : R18.all okEnt = true := by rw [← allK_eq]; exact R18_ok
-  have e19 : R19.all okEnt = true := by rw [← allK_eq]; exact R19_ok
-  have e20 : R20.all okEnt = true := by rw [← allK_eq]; exact R20_ok
-  have e21 : R21.all okEnt = true := by rw [← allK_eq]; exact R21_ok
-  have e22 : R22.all okEnt = true := by rw [← allK_eq]; exact R22_ok
-  have e23 : R23.all okEnt = true := by rw [← allK_eq]; exact R23_ok
-  have e24 : R24.all okEnt = true := by rw [← allK_eq]; exact R24_ok
-  have e25 : R25.all okEnt = true := by rw [← allK_eq]; exact R25_ok
-  have e26 : R26.all okEnt = true := by rw [← allK_eq]; exact R26_ok
-  have e27 : R27.all okEnt = true := by rw [← allK_eq]; exact R27_ok
-  have e28 : R28.all okEnt = true := by rw [← allK_eq]; exact R28_ok
-  have e29 : R29.all okEnt = true := by rw [← allK_eq]; exact R29_ok
-  have e30 : R30.all okEnt = true := by rw [← allK_eq]; exact R30_ok
-  have e31 : R31.all okEnt = true := by rw [← allK_eq]; exact R31_ok
-  have e32 : R32.all okEnt = true := by rw [← allK_eq]; exact R32_ok
-  have e33 : R33.all okEnt = true := by rw [← allK_eq]; exact R33_ok
-  have e34 : R34.all okEnt = true := by rw [← allK_eq]; exact R34_ok
-  have e35 : R35.all okEnt = true := by rw [← allK_eq]; exact R35_ok
-  have e36 : R36.all okEnt = true := by rw [← allK_eq]; exact R36_ok
-  have e37 : R37.all okEnt = true := by rw [← allK_eq]; exact R37_ok
-  have e38 : R38.all okEnt = true := by rw [← allK_eq]; exact R38_ok
-  have e39 : R39.all okEnt = true := by rw [← allK_eq]; exact R39_ok
-  have e40 : R40.all okEnt = true := by rw [← allK_eq]; exact R40_ok
+  have e00 : R00.all okEnt = true := R00_all
+  have e01 : R01.all okEnt = true := R01_all
+  have e02 : R02.all okEnt = true := R02_all
+  have e03 : R03.all okEnt = true := R03_all
+  have e04 : R04.all okEnt = true := R04_all
+  have e05 : R05.all okEnt = true := R05_all
+  have e06 : R06.all okEnt = true := R06_all
+  have e07 : R07.all okEnt = true := R07_all
+  have e08 : R08.all okEnt = true := R08_all
+  have e09 : R09.all okEnt = true := R09_all
+  have e10 : R10.all okEnt = true := R10_all
+  have e11 : R11.all okEnt = true := R11_all
+  have e12 : R12.all okEnt = true := R12_all
+  have e13 : R13.all okEnt = true := R13_all
+  have e14 : R14.all okEnt = true := R14_all
+  have e15 : R15.all okEnt = true := R15_all
+  have e16 : R16.all okEnt = true := R16_all
+  have e17 : R17.all okEnt = true := R17_all
+  have e18 : R18.all okEnt = true := R18_all
+  have e19 : R19.all okEnt = true := R19_all
+  have e20 : R20.all okEnt = true := R20_all
+  have e21 : R21.all okEnt = true := R21_all
+  have e22 : R22.all okEnt = true := R22_all
+  have e23 : R23.all okEnt = true := R23_all
+  have e24 : R24.all okEnt = true := R24_all
+  have e25 : R25.all okEnt = true := R25_all
+  have e26 : R26.all okEnt = true := R26_all
+  have e27 : R27.all okEnt = true := R27_all
+  have e28 : R28.all okEnt = true := R28_all
+  have e29 : R29.all okEnt = true := R29_all
+  have e30 : R30.all okEnt = true := R30_all
+  have e31 : R31.all okEnt = true := R31_all
+  have e32 : R32.all okEnt = true := R32_all
+  have e33 : R33.all okEnt = true := R33_all
+  have e34 : R34.all okEnt = true := R34_all
+  have e35 : R35.all okEnt = true := R35_all
+  have e36 : R36.all okEnt = true := R36_all
+  have e37 : R37.all okEnt = true := R37_all
+  have e38 : R38.all okEnt = true := R38_all
+  have e39 : R39.all okEnt = true := R39_all
   have h : reps10.all okEnt = true := by
-    simp only [reps10, List.all_append, e00, e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35, e36, e37, e38, e39, e40, Bool.and_self]
+    simp only [reps10, List.all_append, e00, e01, e02, e03, e04, e05, e06, e07, e08, e09, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35, e36, e37, e38, e39, Bool.and_self]
   exact List.all_eq_true.1 h
 
 theorem reps10_pats : reps10.map Ent.pat = repPats := by

@@ -1,17 +1,17 @@
 {
- "pin": "238da190d509a96da7f11190e5fbed533bb8af7d",
- "lean_tree_sha256": "fa860a0d15d5e525fb99a1855215e65ece36e2c1cc6c21c6e4acbe69a6b2671d",
- "repo_head": "238da190d509a96da7f11190e5fbed533bb8af7d",
+ "pin": "10bb9a04563a7818852710dfb24cda45631d3470",
+ "lean_tree_sha256": "7f0cd4f486ce3a8a51d6befb16aa37e189452bdb4e0e90cded90d2ccbdedcffe",
+ "repo_head": "10bb9a04563a7818852710dfb24cda45631d3470",
  "lean_version": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz x4",
- "cube10_files": 56,
+ "cube10_files": 55,
  "challenge_check_rc": 0,
  "sorry_or_native_decide": "0",
  "build_rc": 0,
- "build_seconds": 6122,
- "mem_total_kb": "32869284",
+ "build_seconds": 5254,
+ "mem_total_kb": "32869296",
  "audit": [
   "'Packing.Cube.isMaxMinDist_ten' depends on axioms: [propext, Classical.choice, Quot.sound]"
  ],
- "wall_seconds": 6335
+ "wall_seconds": 5478
 }

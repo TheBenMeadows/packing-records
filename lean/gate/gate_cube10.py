@@ -8,7 +8,7 @@ Packing.Cube.isMaxMinDist_ten. Everything it reports is in /kaggle/working/out.
 """
 import hashlib, json, os, subprocess, time
 
-PIN = '238da190d509a96da7f11190e5fbed533bb8af7d'
+PIN = '10bb9a04563a7818852710dfb24cda45631d3470'
 W = '/kaggle/working'
 REPO = W + '/repo'
 LEAN = REPO + '/lean'
@@ -45,6 +45,8 @@ def setup():
        'packing-records && git fetch -q --depth 1 origin %s && git checkout -q FETCH_HEAD'
        % (REPO, REPO, PIN))
     sh('find /kaggle/input -maxdepth 4 | head -40')
+    # The pinned commit may hold generated Cube10 files that the tree no longer has.
+    sh('rm -f %s/Packing/Cube10*.lean' % LEAN)
     tars = [os.path.join(d, f) for d, _, fs in os.walk('/kaggle/input') for f in fs
             if f == 'lean.tar.gz']
     if tars:

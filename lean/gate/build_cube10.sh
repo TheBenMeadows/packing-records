@@ -1,6 +1,6 @@
 #!/bin/bash
-# Build PackingCube10 with a bounded number of Lean processes for the 41 data files.
-# A data file needs up to 28 GB of memory, so `lake build PackingCube10`, which starts one
+# Build PackingCube10 with a bounded number of Lean processes for the 40 data files.
+# A data file needs up to 16 GB of memory, so `lake build PackingCube10`, which starts one
 # process per core, runs out of memory on a machine with less than that per core.
 # Run from lean/. PAR (default 1) is the number of data files checked at once.
 # Prints one line per batch: the modules, lake's exit code and the seconds it took.

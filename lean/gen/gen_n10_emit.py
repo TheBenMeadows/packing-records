@@ -64,9 +64,18 @@ def main():
             continue
         if os.path.exists(os.path.join(pdir, name + '.lean')):
             continue
+        # One theorem for each tree: the kernel frees what it computed for a tree when its
+        # declaration is done, so the file needs the memory of its largest tree, not of all of them.
         src = HDR + 'import Packing.Cube10Check\n\nnamespace Packing.Cube10\n\n'
-        src += 'noncomputable def R%02d : List Ent := [\n  ' % k + ',\n  '.join(chunk) + ']\n\n'
-        src += 'set_option maxHeartbeats 0 in\ntheorem R%02d_ok : allK okEnt R%02d = true := by decide +kernel\n\nend Packing.Cube10\n' % (k, k)
+        for j, ent in enumerate(chunk):
+            src += 'noncomputable def E%02d_%d : Ent :=\n  %s\n\n' % (k, j, ent)
+            src += ('set_option maxHeartbeats 0 in\ntheorem E%02d_%d_ok : okEnt E%02d_%d = true := by '
+                    'decide +kernel\n\n') % (k, j, k, j)
+        es = ['E%02d_%d' % (k, j) for j in range(len(chunk))]
+        src += 'noncomputable def R%02d : List Ent := [%s]\n\n' % (k, ', '.join(es))
+        src += 'theorem R%02d_all : R%02d.all okEnt = true := by\n' % (k, k)
+        src += ('  simp only [R%02d, List.all_cons, List.all_nil, %s, Bool.and_self, Bool.and_true]\n\n'
+                'end Packing.Cube10\n') % (k, ', '.join(e + '_ok' for e in es))
         open(os.path.join(pdir, name + '.lean'), 'w').write(src)
     if partial:
         print('partial: wrote available chunks')
@@ -119,7 +128,7 @@ def main():
     src += '/-- The checked proofs, one for each pattern up to reflection. -/\n'
     src += 'noncomputable def reps10 : List Ent := ' + ' ++ '.join('R%02d' % k for k in range(nfiles)) + '\n\n'
     src += 'theorem reps10_ok : ∀ e ∈ reps10, okEnt e = true := by\n'
-    src += ''.join('  have e%02d : R%02d.all okEnt = true := by rw [← allK_eq]; exact R%02d_ok\n' % (k, k, k) for k in range(nfiles))
+    src += ''.join('  have e%02d : R%02d.all okEnt = true := R%02d_all\n' % (k, k, k) for k in range(nfiles))
     src += '  have h : reps10.all okEnt = true := by\n'
     src += '    simp only [reps10, List.all_append, %s, Bool.and_self]\n' % ', '.join('e%02d' % k for k in range(nfiles))
     src += '  exact List.all_eq_true.1 h\n\n'
