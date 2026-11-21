@@ -1,0 +1,12 @@
+{
+  "challenge_module": "ChallengeCube10",
+  "solution_module": "PackingCube10",
+  "theorem_names": [
+    "Packing.Cube.isMaxMinDist_ten"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ]
+}

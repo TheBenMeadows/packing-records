@@ -10,6 +10,16 @@ import sys, os, json, itertools, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_n10 as g
 
+# Classes searched with (mincut, lpw) other than the command line's 64 256. For these nine the
+# kernel needs less memory for the tree of the setting below (measured one tree per Lean process:
+# class 235 takes 8.5 GB instead of 24.8 GB). A smaller tree is not always a lighter one: for
+# class 173 every other setting tried costs more than 64 256, so it is not listed.
+OVERRIDES = {
+    177: (32, 256), 693: (32, 256),
+    225: (32, 512), 227: (32, 512), 231: (32, 512), 235: (32, 512),
+    643: (32, 512), 644: (32, 512), 789: (32, 512),
+}
+
 def keyT(t, k):
     a, b, c = t & 1, (t >> 1) & 1, (t >> 2) & 1
     qx, qy, z = k % 2, (k // 2) % 2, k // 4
@@ -29,7 +39,7 @@ def classes():
 
 if __name__ == '__main__':
     part, nparts, outdir = int(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
-    g.MINCUT = int(sys.argv[4]); lpw = int(sys.argv[5])
+    mincut0, lpw0 = int(sys.argv[4]), int(sys.argv[5])
     pats, rep_of, reps = classes()
     if part == 0:
         print('classes', len(reps), flush=True)
@@ -39,6 +49,7 @@ if __name__ == '__main__':
         if idx not in todo:
             continue
         t0 = time.time()
+        g.MINCUT, lpw = OVERRIDES.get(idx, (mincut0, lpw0))
         try:
             out, ctx = g.solve(list(rep), use_lp=lpw, limit=400000)
             res = {'rep': rep, 'nodes': out}
